@@ -17,9 +17,24 @@ window.TRAINERS_DATA = {
       "category": "revision",
       "title": "Clothes & Moving Abroad + Revision",
       "URL": "https://tinakovalova.github.io/trainer/clothes-trainer_cover.html"
+    },
+    {
+      "category": "grammar",
+      "title": "Clothes & Moving Abroad + grammar",
+      "URL": "https://tinakovalova.github.io/trainer/clothes-trainer_cover.html"
+    },
+    {
+      "category": "revision",
+      "title": "Clothes & Moving Abroad + Revision",
+      "URL": "https://tinakovalova.github.io/trainer/clothes-trainer_cover.html"
     }
   ],
   "SpeakOut C1": [
+    {
+      "category": "vocabulary",
+      "title": "SpeakOut C1 (Unit 1A/B) vocabulary",
+      "URL": "https://tinakovalova.github.io/name/speakout-c1-unit1ab-revision.html"
+    },
     {
       "category": "vocabulary",
       "title": "SpeakOut C1 (Unit 1A/B) vocabulary",
