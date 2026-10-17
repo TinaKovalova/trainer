@@ -889,7 +889,7 @@
                     </div>
                 </div>
 
-                <!-- Сообщение о загрузке или ошибке; курсы добавляются скриптом из data.js -->
+                <!-- Сообщение о загрузке или ошибке; курсы добавляются скриптом из  -->
                 <div class="status" id="status" role="status" aria-live="polite">Loading courses…</div>
             </nav>
         </aside>
@@ -906,7 +906,7 @@
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-    <!-- Шаблоны: скрипт копирует их для каждого курса и тренажёра из data.js -->
+    <!-- Шаблоны: скрипт копирует их для каждого курса и тренажёра из  -->
     <template id="tpl-group">
         <section class="group">
             <h2 class="group__title"></h2>
@@ -940,7 +940,7 @@
     </template>
 
     <!-- Данные меню: data.js рядом с этим файлом, задаёт window.TRAINERS_DATA -->
-    <script src="data.js"></script>
+    <script src="DATA/data.js"></script>
     <script>
         (() => {
             const $ = (s, r = document) => r.querySelector(s);
