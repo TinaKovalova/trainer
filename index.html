@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap">
+    <title>Trainers</title>
+    <style>
+        /* Layout: слева колонка с курсами (аккордеон, на узких экранах превращается в select), справа окно предпросмотра тренажёра.
+           Палитра и шрифты те же, что в тренажёре: пастельные заливки (--p-*) и более глубокие тона тех же оттенков для текста (--k-*). */
+        :root {
+            --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+            --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+
+            --bg: #fffbfe;
+            --sheet: #ffffff;
+            --ink: #2a2440;
+            --muted: #6a6386;
+            --line: #efdff0;
+            --ok: #146f4b;
+            --ok-soft: #c6f8e5;
+            --bad: #b3261e;
+            --bad-soft: #ffe1ea;
+
+            --k-match: #7a2fa5;
+            --k-quiz: #735600;
+            --k-tf: #6e5b00;
+            --k-whack: #a8326e;
+            --k-type: #08707a;
+            --k-anagram: #8a4a00;
+            --k-cloze: #146f4b;
+            --k-unjumble: #0f6f64;
+            --k-words: #5a3fc0;
+
+            --p-match: #f5e3ff;
+            --p-quiz: #fff2c3;
+            --p-tf: #fff9d7;
+            --p-whack: #ffe2f2;
+            --p-type: #d1f8fd;
+            --p-anagram: #ffe9d1;
+            --p-cloze: #d8f9e9;
+            --p-unjumble: #d6fbf2;
+            --p-words: #f1e6ff;
+
+            --g1: #e0fbee;
+            --g2: #fff5d4;
+            --g3: #daf9fe;
+            --g4: #ffedf9;
+            --g5: #fffae0;
+
+            --pad: clamp(14px, 2.4vw, 28px);
+            --ease: cubic-bezier(.2, .7, .2, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root:not([data-theme="light"]) {
+                --bg: #16141f;
+                --sheet: #1d1c2e;
+                --ink: #f1eefa;
+                --muted: #b0a9c8;
+                --line: #36304a;
+                --ok: #8fe8c4;
+                --ok-soft: #1f3d33;
+                --bad: #ff9a8f;
+                --bad-soft: #46293a;
+                --k-match: #d9a8f0;
+                --k-quiz: #f0d27a;
+                --k-tf: #f0e08a;
+                --k-whack: #f2a6c4;
+                --k-type: #8eeef5;
+                --k-anagram: #ffc497;
+                --k-cloze: #8fe8c4;
+                --k-unjumble: #8ff0dc;
+                --k-words: #c6b4ff;
+                --p-match: #3a2a4a;
+                --p-quiz: #3d3420;
+                --p-tf: #3d3820;
+                --p-whack: #46293a;
+                --p-type: #1f3d42;
+                --p-anagram: #45321f;
+                --p-cloze: #1f3d33;
+                --p-unjumble: #1d3d39;
+                --p-words: #332c52;
+                --g1: #2a1c2a;
+                --g2: #241d36;
+                --g3: #172331;
+                --g4: #15262a;
+                --g5: #2e2a17;
+                color-scheme: dark;
+            }
+        }
+
+        :root[data-theme="dark"] {
+            --bg: #16141f;
+            --sheet: #1d1c2e;
+            --ink: #f1eefa;
+            --muted: #b0a9c8;
+            --line: #36304a;
+            --ok: #8fe8c4;
+            --ok-soft: #1f3d33;
+            --bad: #ff9a8f;
+            --bad-soft: #46293a;
+            --k-match: #d9a8f0;
+            --k-quiz: #f0d27a;
+            --k-tf: #f0e08a;
+            --k-whack: #f2a6c4;
+            --k-type: #8eeef5;
+            --k-anagram: #ffc497;
+            --k-cloze: #8fe8c4;
+            --k-unjumble: #8ff0dc;
+            --k-words: #c6b4ff;
+            --p-match: #3a2a4a;
+            --p-quiz: #3d3420;
+            --p-tf: #3d3820;
+            --p-whack: #46293a;
+            --p-type: #1f3d42;
+            --p-anagram: #45321f;
+            --p-cloze: #1f3d33;
+            --p-unjumble: #1d3d39;
+            --p-words: #332c52;
+            --g1: #2a1c2a;
+            --g2: #241d36;
+            --g3: #172331;
+            --g4: #15262a;
+            --g5: #2e2a17;
+            color-scheme: dark;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            min-height: 100dvh;
+            background: var(--bg);
+            color: var(--ink);
+            font-family: var(--body);
+            font-size: 17px;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Градиент лежит на фиксированном слое: так он не дёргается при прокрутке на телефонах */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background: linear-gradient(160deg, var(--g1) 0%, var(--g2) 30%, var(--g3) 58%, var(--g4) 82%, var(--g5) 100%);
+        }
+
+        h1,
+        p,
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        select {
+            font: inherit;
+            color: inherit;
+        }
+
+        button {
+            background: none;
+            border: 0;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        svg {
+            display: block;
+        }
+
+        :focus-visible {
+            outline: 3px solid var(--c, var(--k-words));
+            outline-offset: 2px;
+        }
+
+        /* Цвет курса: у каждого курса свой пастельный оттенок. Тон задаётся атрибутом data-tone в разметке. */
+        [data-tone="words"] {
+            --c: var(--k-words);
+            --p: var(--p-words);
+        }
+
+        [data-tone="match"] {
+            --c: var(--k-match);
+            --p: var(--p-match);
+        }
+
+        [data-tone="quiz"] {
+            --c: var(--k-quiz);
+            --p: var(--p-quiz);
+        }
+
+        [data-tone="tf"] {
+            --c: var(--k-tf);
+            --p: var(--p-tf);
+        }
+
+        [data-tone="whack"] {
+            --c: var(--k-whack);
+            --p: var(--p-whack);
+        }
+
+        [data-tone="type"] {
+            --c: var(--k-type);
+            --p: var(--p-type);
+        }
+
+        [data-tone="anagram"] {
+            --c: var(--k-anagram);
+            --p: var(--p-anagram);
+        }
+
+        [data-tone="cloze"] {
+            --c: var(--k-cloze);
+            --p: var(--p-cloze);
+        }
+
+        [data-tone="unjumble"] {
+            --c: var(--k-unjumble);
+            --p: var(--p-unjumble);
+        }
+
+        /* ---------- Каркас страницы ---------- */
+        .layout {
+            max-width: 1680px;
+            margin-inline: auto;
+            padding-block: var(--pad);
+            padding-left: max(16px, env(safe-area-inset-left, 0px), var(--pad));
+            padding-right: max(16px, env(safe-area-inset-right, 0px), var(--pad));
+            display: grid;
+            grid-template-columns: clamp(300px, 30vw, 440px) minmax(0, 1fr);
+            gap: var(--pad);
+            align-items: start;
+        }
+
+        .side {
+            position: sticky;
+            top: var(--pad);
+            max-height: calc(100vh - 2 * var(--pad));
+            max-height: calc(100dvh - 2 * var(--pad));
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            min-width: 0;
+            /* запас по краям, чтобы тени карточек не обрезались прокруткой */
+            padding: 16px 22px 32px 16px;
+            margin: -16px -22px -32px -16px;
+            scrollbar-width: thin;
+            scrollbar-color: var(--line) transparent;
+        }
+
+        .brand {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .eyebrow {
+            font-size: 13px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--k-words);
+            font-weight: 700;
+        }
+
+        .owner {
+            color: var(--muted);
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .owner[hidden] {
+            display: none;
+        }
+
+        /* Состояние загрузки и ошибки списка курсов */
+        .status {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 16px 18px;
+            border-radius: 18px;
+            background: var(--sheet);
+            border: 1px solid var(--line);
+            color: var(--muted);
+        }
+
+        .status[hidden] {
+            display: none;
+        }
+
+        .status.is-error {
+            background: var(--bad-soft);
+            border-color: var(--bad);
+            color: var(--bad);
+        }
+
+        .status strong {
+            font-family: var(--display);
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .status__btn {
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 2px solid currentColor;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-family: var(--display);
+            font-weight: 800;
+            font-size: clamp(28px, 3.4vw, 40px);
+            line-height: 1.04;
+            text-wrap: balance;
+        }
+
+        /* ---------- Навигация ---------- */
+        .navigation {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-width: 0;
+        }
+
+        /* Выбор курса на малых экранах (вместо аккордеона) */
+        .picker {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            --c: var(--k-words);
+            --p: var(--p-words);
+        }
+
+        .picker[hidden] {
+            display: none;
+        }
+
+        .picker__label {
+            font-size: 13px;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--c);
+        }
+
+        .picker__field {
+            position: relative;
+        }
+
+        .picker__select {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            min-height: 56px;
+            padding: 12px 52px 12px 18px;
+            border: 2px solid color-mix(in srgb, var(--c) 35%, var(--p));
+            border-radius: 18px;
+            background: color-mix(in srgb, var(--p) 55%, var(--sheet));
+            color: var(--ink);
+            font-family: var(--display);
+            font-weight: 800;
+            font-size: 18px;
+            line-height: 1.2;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
+
+        .picker__select:hover {
+            border-color: var(--c);
+        }
+
+        .picker__chev {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            transform: translateY(-50%);
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            background: var(--c);
+            color: var(--sheet);
+            pointer-events: none;
+        }
+
+        .picker__chev svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Курс (details) */
+        .course {
+            background: color-mix(in srgb, var(--p) 32%, var(--sheet));
+            border: 1px solid color-mix(in srgb, var(--c) 28%, var(--line));
+            border-top: 10px solid color-mix(in srgb, var(--c) 45%, var(--p));
+            border-radius: 22px;
+            box-shadow: 0 8px 26px color-mix(in srgb, var(--c) 12%, transparent);
+            min-width: 0;
+        }
+
+        .course summary {
+            list-style: none;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto auto;
+            align-items: center;
+            gap: 10px;
+            min-height: 60px;
+            padding: 10px 14px 10px 18px;
+            border-radius: 14px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .course summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .course__title {
+            font-family: var(--display);
+            font-weight: 800;
+            font-size: clamp(18px, 1.5vw, 21px);
+            line-height: 1.15;
+            text-wrap: balance;
+            min-width: 0;
+            overflow-wrap: anywhere;
+            color: color-mix(in srgb, var(--c) 45%, var(--ink));
+        }
+
+        .course__count {
+            font-size: 13px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            padding: 2px 10px;
+            border-radius: 99px;
+            background: var(--c);
+            color: var(--sheet);
+        }
+
+        .course__chev {
+            width: 32px;
+            height: 32px;
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+            background: var(--sheet);
+            color: var(--c);
+            border: 2px solid color-mix(in srgb, var(--c) 40%, var(--p));
+        }
+
+        .course__chev svg {
+            width: 16px;
+            height: 16px;
+            transition: transform .35s var(--ease);
+        }
+
+        .course[data-expanded="true"] .course__chev svg {
+            transform: rotate(180deg);
+        }
+
+        .course__body {
+            overflow: hidden;
+        }
+
+        .course__list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 2px 10px 12px;
+            counter-reset: trainers;
+        }
+
+        .course__item {
+            --c: inherit;
+            display: grid;
+            grid-template-columns: 30px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 4px 8px;
+            padding: 3px 4px 3px 8px;
+            border-radius: 14px;
+            background: var(--sheet);
+            border: 2px solid color-mix(in srgb, var(--c) 18%, var(--p));
+            transition: background-color .15s, border-color .15s;
+        }
+
+        .course__item::before {
+            counter-increment: trainers;
+            content: counter(trainers);
+            width: 28px;
+            height: 28px;
+            border-radius: 9px;
+            display: grid;
+            place-items: center;
+            font-size: 13px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            background: var(--p);
+            color: var(--c);
+        }
+
+        .course__link {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 3px;
+            min-width: 0;
+            padding: 9px 4px;
+            line-height: 1.3;
+            overflow-wrap: anywhere;
+        }
+
+        .course__actions {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            color: var(--muted);
+            transition: color .15s, background-color .15s;
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .course__item.is-active {
+            background: var(--p);
+            border-color: var(--c);
+        }
+
+        .course__item.is-active::before {
+            background: var(--c);
+            color: var(--sheet);
+        }
+
+        .course__item.is-active .course__link {
+            font-weight: 700;
+        }
+
+        @media (any-hover: hover) {
+            .course summary:hover {
+                background: color-mix(in srgb, var(--p) 45%, transparent);
+            }
+
+            .course__item:hover {
+                background: var(--p);
+                border-color: color-mix(in srgb, var(--c) 45%, var(--p));
+            }
+
+            .course__item.is-active:hover {
+                background: var(--p);
+            }
+
+            .icon-btn:hover {
+                color: var(--c);
+                background: color-mix(in srgb, var(--c) 14%, var(--sheet));
+            }
+        }
+
+        /* Режим select (узкие экраны): виден один курс, заголовок-аккордеон скрыт, выбор курса делает select сверху */
+        .is-select .course summary {
+            display: none;
+        }
+
+        .is-select .course:not(.is-current) {
+            display: none;
+        }
+
+        .is-select .course__list {
+            padding-top: 10px;
+        }
+
+        /* ---------- Предпросмотр ---------- */
+        .preview {
+            position: sticky;
+            top: var(--pad);
+            height: calc(100vh - 2 * var(--pad));
+            height: calc(100dvh - 2 * var(--pad));
+            min-height: 360px;
+            border-radius: 22px;
+            border: 1px solid var(--line);
+            border-top: 10px solid color-mix(in srgb, var(--c) 45%, var(--p));
+            background: var(--sheet);
+            box-shadow: 0 8px 26px color-mix(in srgb, var(--c) 12%, transparent);
+            transition: border-color .3s, box-shadow .3s;
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        .preview iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            background: var(--sheet);
+        }
+
+        .preview:not(.has-content) iframe {
+            visibility: hidden;
+        }
+
+        .preview__empty {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .preview.has-content .preview__empty {
+            display: none;
+        }
+
+        .preview__icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 24px;
+            display: grid;
+            place-items: center;
+            background: var(--p);
+            color: var(--c);
+        }
+
+        .preview__icon svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .preview__empty strong {
+            font-family: var(--display);
+            font-weight: 800;
+            font-size: clamp(22px, 2.4vw, 28px);
+            line-height: 1.1;
+            text-wrap: balance;
+        }
+
+        .preview__empty span {
+            color: var(--muted);
+            max-width: 34ch;
+        }
+
+        /* ---------- Уведомление ---------- */
+        .toast {
+            position: fixed;
+            top: calc(env(safe-area-inset-top, 0px) + 18px);
+            right: max(16px, env(safe-area-inset-right, 0px));
+            z-index: 20;
+            max-width: calc(100vw - 32px);
+            padding: 12px 18px;
+            border-radius: 14px;
+            border: 2px solid var(--ok);
+            background: var(--ok-soft);
+            color: var(--ok);
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .12);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity .25s, transform .25s var(--ease), visibility 0s .25s;
+            pointer-events: none;
+        }
+
+        .toast.is-error {
+            border-color: var(--bad);
+            background: var(--bad-soft);
+            color: var(--bad);
+        }
+
+        .toast.active {
+            opacity: 1;
+            visibility: visible;
+            transform: none;
+            transition-delay: 0s;
+        }
+
+        /* ---------- Адаптив ---------- */
+        /* Большие экраны */
+        @media (min-width: 1600px) {
+            body {
+                font-size: 18px;
+            }
+
+            .layout {
+                grid-template-columns: 440px minmax(0, 1fr);
+            }
+        }
+
+        /* Планшеты и ниже: колонки складываются, предпросмотр уходит под список */
+        @media (max-width: 959.98px) {
+            .layout {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .side {
+                position: static;
+                max-height: none;
+                overflow: visible;
+                padding: 0;
+                margin: 0;
+            }
+
+            .preview {
+                position: relative;
+                top: 0;
+                height: clamp(440px, 78vh, 920px);
+                height: clamp(440px, 78dvh, 920px);
+                scroll-margin-top: 12px;
+            }
+        }
+
+        /* Телефоны */
+        @media (max-width: 720px) {
+            body {
+                font-size: 16px;
+            }
+
+            .layout {
+                gap: 16px;
+                padding-block: 14px 20px;
+            }
+
+            .preview {
+                height: min(78vh, 760px);
+                height: min(78dvh, 760px);
+                min-height: 420px;
+                border-radius: 18px;
+            }
+
+            .course {
+                border-radius: 18px;
+            }
+
+            .toast {
+                left: max(16px, env(safe-area-inset-left, 0px));
+                right: max(16px, env(safe-area-inset-right, 0px));
+                max-width: none;
+                text-align: center;
+            }
+        }
+
+        /* Совсем узкие экраны */
+        @media (max-width: 360px) {
+            .layout {
+                padding-inline: max(12px, env(safe-area-inset-left, 0px)) max(12px, env(safe-area-inset-right, 0px));
+            }
+
+            .course__item {
+                grid-template-columns: 26px minmax(0, 1fr) auto;
+                gap: 4px;
+                padding-left: 6px;
+            }
+
+            .course__item::before {
+                width: 24px;
+                height: 24px;
+                font-size: 12px;
+                border-radius: 8px;
+            }
+
+            .icon-btn {
+                width: 36px;
+            }
+        }
+
+        /* Низкие ландшафтные экраны телефонов: список и предпросмотр рядом, с прокруткой списка */
+        @media (max-height: 520px) and (min-width: 600px) {
+            .layout {
+                grid-template-columns: clamp(260px, 36vw, 360px) minmax(0, 1fr);
+            }
+
+            .side {
+                position: sticky;
+                top: var(--pad);
+                max-height: calc(100vh - 2 * var(--pad));
+                max-height: calc(100dvh - 2 * var(--pad));
+                overflow-y: auto;
+            }
+
+            .preview {
+                position: sticky;
+                top: var(--pad);
+                height: calc(100vh - 2 * var(--pad));
+                height: calc(100dvh - 2 * var(--pad));
+                min-height: 0;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                transition-duration: .01ms !important;
+                animation-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Иконки подключаются один раз и используются через <use> -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+        <symbol id="i-chev" viewBox="0 0 16 16">
+            <path d="M3 6l5 5 5-5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"
+                stroke-linejoin="round" />
+        </symbol>
+        <symbol id="i-link" viewBox="0 0 24 24">
+            <path
+                d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </symbol>
+        <symbol id="i-open" viewBox="0 0 24 24">
+            <path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </symbol>
+        <symbol id="i-play" viewBox="0 0 24 24">
+            <path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"
+                fill="currentColor" />
+        </symbol>
+    </svg>
+
+    <div class="layout">
+        <aside class="side">
+            <header class="brand">
+                <p class="eyebrow">Trainers</p>
+                <h1>Choose an exercise</h1>
+                <p class="owner" id="owner" hidden></p>
+            </header>
+
+            <nav id="nav" class="navigation" aria-label="Exercises">
+                <!-- Выбор курса: показывается только на узких экранах, список заполняется скриптом -->
+                <div class="picker" id="pickerWrap" hidden>
+                    <label class="picker__label" for="picker">Course</label>
+                    <div class="picker__field">
+                        <select class="picker__select" id="picker"></select>
+                        <span class="picker__chev"><svg>
+                                <use href="#i-chev" />
+                            </svg></span>
+                    </div>
+                </div>
+
+                <!-- Сообщение о загрузке или ошибке; курсы добавляются скриптом из data.js -->
+                <div class="status" id="status" role="status" aria-live="polite">Loading courses…</div>
+            </nav>
+        </aside>
+
+        <main class="preview" id="previewBox" data-tone="words">
+            <div class="preview__empty">
+                <div class="preview__icon"><svg>
+                        <use href="#i-play" />
+                    </svg></div>
+                <strong>Select a trainer</strong>
+                <span>Pick an exercise from the list and it will open here.</span>
+            </div>
+            <iframe src="about:blank" name="preview" id="frame" title="Trainer page preview" allowfullscreen></iframe>
+        </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <!-- Шаблоны: скрипт копирует их для каждого курса и тренажёра из data.js -->
+    <template id="tpl-course">
+        <details class="course">
+            <summary>
+                <span class="course__title"></span>
+                <span class="course__count"></span>
+                <span class="course__chev"><svg>
+                        <use href="#i-chev" />
+                    </svg></span>
+            </summary>
+            <div class="course__body">
+                <ul class="course__list"></ul>
+            </div>
+        </details>
+    </template>
+
+    <template id="tpl-item">
+        <li class="course__item">
+            <a class="course__link" target="preview">
+                <span class="course__name"></span>
+            </a>
+            <div class="course__actions">
+                <button type="button" class="icon-btn" data-action="copy" aria-label="Copy link" title="Copy link"><svg>
+                        <use href="#i-link" />
+                    </svg></button>
+                <a class="icon-btn" data-action="open" target="_blank" rel="noopener" aria-label="Open in a new tab"
+                    title="Open in a new tab"><svg>
+                        <use href="#i-open" />
+                    </svg></a>
+            </div>
+        </li>
+    </template>
+
+    <!-- Данные меню: data.js рядом с этим файлом, задаёт window.TRAINERS_DATA -->
+    <script src="_data.js"></script>
+    <script>
+        (() => {
+            const $ = (s, r = document) => r.querySelector(s);
+            const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+
+            const nav = $("#nav");
+            let courses = [];
+            const previewBox = $("#previewBox");
+            const frame = $("#frame");
+            const toast = $("#toast");
+            const picker = $("#picker");
+            const pickerWrap = $("#pickerWrap");
+
+            const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+            const smallScreen = matchMedia("(max-width: 720px)");
+            const stacked = matchMedia("(max-width: 959.98px)");
+
+            const DURATION = 380;
+            const EASING = "cubic-bezier(.2, .7, .2, 1)";
+
+            /* ---------- Данные и построение меню ---------- */
+            // Цвета блоков без категории идут по порядку; цвета категорий заданы ниже
+            const COURSE_TONES = ["type", "whack", "match", "unjumble", "quiz", "tf"];
+            // Цветовая гамма категории: фиолетовая words, оранжевая anagram, зелёная cloze, голубая type,
+            // розовая whack, сиреневая match, бирюзовая unjumble, жёлтая quiz. Незнакомые категории получают цвет сами.
+            const CATEGORY_TONES = {
+                vocabulary: "words",
+                grammar: "anagram",
+                revision: "cloze",
+                listening: "type",
+                reading: "whack",
+                writing: "match",
+                speaking: "unjumble"
+            };
+            const FALLBACK_TONES = ["quiz", "tf", "match", "whack", "type"];
+
+            const tplCourse = $("#tpl-course");
+            const tplItem = $("#tpl-item");
+            const statusBox = $("#status");
+            const ownerEl = $("#owner");
+            let current = null;
+
+            function categoryTone(category) {
+                const key = category.toLowerCase();
+                if (CATEGORY_TONES[key]) return CATEGORY_TONES[key];
+                let sum = 0;
+                for (const ch of key) sum += ch.charCodeAt(0);
+                return FALLBACK_TONES[sum % FALLBACK_TONES.length];
+            }
+
+            // Пропускаем только обычные http(s)-ссылки
+            function safeUrl(raw) {
+                if (typeof raw !== "string") return null;
+                try {
+                    const u = new URL(raw, location.href);
+                    return /^https?:$/.test(u.protocol) ? u.href : null;
+                } catch (err) {
+                    return null;
+                }
+            }
+
+            // Каждый ключ верхнего уровня с массивом — курс. Тренажёры курса делятся по category:
+            // пара «курс + категория» становится отдельным блоком, например «fce Grammar Practice».
+            // Если название блока должно быть другим, добавьте его сюда: { revision: "Revision" }
+            const CATEGORY_LABELS = {};
+
+            function capitalize(str) {
+                return str.charAt(0).toUpperCase() + str.slice(1);
+            }
+
+            function parseCourses(data) {
+                const blocks = [];
+                Object.entries(data || {}).forEach(([course, list], courseIndex) => {
+                    if (!Array.isArray(list)) return;
+                    const groups = new Map();
+                    list.forEach((it) => {
+                        const item = {title: String(it?.title ?? "").trim(), url: safeUrl(it?.URL ?? it?.url)};
+                        if (!item.title || !item.url) return;
+                        const category = String(it?.category ?? "").trim();
+                        const key = category.toLowerCase();
+                        if (!groups.has(key)) groups.set(key, {category, items: []});
+                        groups.get(key).items.push(item);
+                    });
+                    groups.forEach(({category, items}) => {
+                        const label = CATEGORY_LABELS[category.toLowerCase()] || capitalize(category) + " Practice";
+                        blocks.push({
+                            title: category ? course + " " + label : course,
+                            // Цвет блока зависит от категории; без категории цвета идут по порядку курсов
+                            tone: category ? categoryTone(category) : COURSE_TONES[courseIndex % COURSE_TONES.length],
+                            items
+                        });
+                    });
+                });
+                return blocks;
+            }
+
+            function buildCourses(list) {
+                courses.forEach((d) => d.remove());
+                courses = list.map((c, i) => {
+                    const d = tplCourse.content.firstElementChild.cloneNode(true);
+                    d.dataset.tone = c.tone;
+                    $(".course__title", d).textContent = c.title;
+                    $(".course__count", d).textContent = c.items.length;
+                    const ul = $(".course__list", d);
+                    c.items.forEach((it) => {
+                        const li = tplItem.content.firstElementChild.cloneNode(true);
+                        $(".course__link", li).href = it.url;
+                        $(".course__name", li).textContent = it.title;
+                        $('[data-action="open"]', li).href = it.url;
+                        ul.append(li);
+                    });
+                    return d;
+                });
+                nav.append(...courses);
+
+                // В списке открыт только один курс: первый
+                current = courses[0];
+                courses.forEach((d) => {
+                    d.open = d === current;
+                    d.dataset.expanded = String(d.open);
+                });
+                picker.replaceChildren(...courses.map((d, i) => new Option($(".course__title", d).textContent.trim(), i)));
+                applyMode();
+            }
+
+            function showError(message) {
+                statusBox.hidden = false;
+                statusBox.classList.add("is-error");
+                statusBox.replaceChildren();
+                const title = document.createElement("strong");
+                title.textContent = "Could not load the courses";
+                const text = document.createElement("span");
+                text.textContent = message;
+                statusBox.append(title, text);
+            }
+
+            function load() {
+                const data = window.TRAINERS_DATA;
+                if (!data || typeof data !== "object") {
+                    showError("data.js was not found next to this page, or it does not define window.TRAINERS_DATA.");
+                    return;
+                }
+                const list = parseCourses(data);
+                if (!list.length) {
+                    showError("data.js has no courses with valid titles and URLs.");
+                    return;
+                }
+                if (data.owner) {
+                    ownerEl.textContent = String(data.owner);
+                    ownerEl.hidden = false;
+                }
+                buildCourses(list);
+                statusBox.hidden = true;
+            }
+
+            /* ---------- Плавный аккордеон ---------- */
+            const anims = new WeakMap();
+
+            function stopAnimation(body) {
+                const a = anims.get(body);
+                if (a) {a.cancel(); anims.delete(body);}
+            }
+
+            function toggle(d, expand) {
+                const body = $(".course__body", d);
+                const prev = anims.get(body);
+                // Если анимация ещё идёт, продолжаем с текущей высоты
+                const from = prev && prev.playState === "running"
+                    ? body.getBoundingClientRect().height
+                    : (expand ? 0 : body.offsetHeight);
+                stopAnimation(body);
+
+                d.dataset.expanded = String(expand);
+                if (expand) d.open = true;
+
+                if (reduced.matches) {
+                    d.open = expand;
+                    return;
+                }
+
+                const to = expand ? body.scrollHeight : 0;
+                const anim = body.animate(
+                    {height: [from + "px", to + "px"], opacity: expand ? [from ? 1 : 0, 1] : [1, 0]},
+                    {duration: DURATION, easing: EASING, fill: expand ? "none" : "forwards"}
+                );
+                anims.set(body, anim);
+                anim.onfinish = () => {
+                    if (!expand) d.open = false;
+                    if (expand) anims.delete(body);
+                };
+            }
+
+            nav.addEventListener("click", (e) => {
+                const summary = e.target.closest("summary");
+                if (!summary) return;
+                e.preventDefault();
+                if (nav.classList.contains("is-select")) return;
+                const d = summary.parentElement;
+                const expand = d.dataset.expanded !== "true";
+                if (expand) {
+                    courses.forEach((o) => {if (o !== d && o.dataset.expanded === "true") toggle(o, false);});
+                    current = d;
+                }
+                toggle(d, expand);
+            });
+
+            /* ---------- Режим select на узких экранах ---------- */
+            function showCurrent() {
+                courses.forEach((d) => d.classList.toggle("is-current", d === current));
+                picker.value = String(courses.indexOf(current));
+                pickerWrap.dataset.tone = current.dataset.tone;
+            }
+
+            function applyMode() {
+                if (!courses.length) return;
+                courses.forEach((d) => stopAnimation($(".course__body", d)));
+                if (smallScreen.matches) {
+                    nav.classList.add("is-select");
+                    pickerWrap.hidden = false;
+                    courses.forEach((d) => {d.open = true; d.dataset.expanded = "true";});
+                    showCurrent();
+                } else {
+                    nav.classList.remove("is-select");
+                    pickerWrap.hidden = true;
+                    courses.forEach((d) => {
+                        d.classList.remove("is-current");
+                        const isCurrent = d === current;
+                        d.open = isCurrent;
+                        d.dataset.expanded = String(isCurrent);
+                    });
+                }
+            }
+
+            picker.addEventListener("change", () => {
+                current = courses[Number(picker.value)];
+                showCurrent();
+            });
+
+            smallScreen.addEventListener("change", applyMode);
+            load();
+
+            /* ---------- Выбор тренажёра, копирование ссылки ---------- */
+            nav.addEventListener("click", (e) => {
+                const link = e.target.closest(".course__link");
+                if (link) {
+                    e.preventDefault();
+                    $$(".course__item.is-active", nav).forEach((li) => li.classList.remove("is-active"));
+                    link.closest(".course__item").classList.add("is-active");
+                    frame.src = link.href;
+                    previewBox.dataset.tone = link.closest(".course").dataset.tone;
+                    previewBox.classList.add("has-content");
+                    if (stacked.matches) {
+                        previewBox.scrollIntoView({behavior: reduced.matches ? "auto" : "smooth", block: "start"});
+                    }
+                    return;
+                }
+
+                const copy = e.target.closest('[data-action="copy"]');
+                if (copy) {
+                    const url = $(".course__link", copy.closest(".course__item")).href;
+                    copyText(url)
+                        .then(() => displayToast("Link copied"))
+                        .catch(() => displayToast("Error copying link", true));
+                }
+            });
+
+            function copyText(text) {
+                if (navigator.clipboard && window.isSecureContext) {
+                    return navigator.clipboard.writeText(text);
+                }
+                return new Promise((resolve, reject) => {
+                    const ta = document.createElement("textarea");
+                    ta.value = text;
+                    ta.setAttribute("readonly", "");
+                    ta.style.cssText = "position:fixed;top:0;left:0;opacity:0";
+                    document.body.appendChild(ta);
+                    ta.select();
+                    let ok = false;
+                    try {ok = document.execCommand("copy");} catch (err) { /* ignore */}
+                    ta.remove();
+                    ok ? resolve() : reject(new Error("copy failed"));
+                });
+            }
+
+            let toastTimer;
+            function displayToast(message, isError = false) {
+                toast.textContent = message;
+                toast.classList.toggle("is-error", isError);
+                toast.classList.add("active");
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => toast.classList.remove("active"), 3000);
+            }
+        })();
+    </script>
+</body>
+
+</html>
