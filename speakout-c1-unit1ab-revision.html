@@ -1,0 +1,819 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SpeakOut C1 (Unit 1A/B) Revision</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Source+Sans+3:wght@400;600;700&display=swap">
+<style>
+/* Layout: colourful workbook — every exercise format has its own colour; a segmented progress stripe in the header shows each exercise as a coloured cell that fills when done */
+:root {
+  --bg: #f6f4ff; --sheet: #ffffff; --ink: #1d1b33; --muted: #625f80; --line: #e2def3;
+  --ok: #138a52; --ok-soft: #dcf5e8; --bad: #d1352b; --bad-soft: #fde4e1;
+  --k-match: #7b3fe4; --k-quiz: #2563eb; --k-tf: #ea6a0c; --k-whack: #db2777; --k-type: #0d9488; --k-anagram: #c08a00; --k-cloze: #16a34a; --k-unjumble: #e0453a; --k-words: #4f46e5;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #13121f; --sheet: #1d1c2e; --ink: #eeedf8; --muted: #a5a2c4; --line: #33314d;
+  --ok: #4ade94; --ok-soft: #133a28; --bad: #ff7b70; --bad-soft: #45201d;
+  --k-match: #a78bfa; --k-quiz: #60a5fa; --k-tf: #fb923c; --k-whack: #f472b6; --k-type: #2dd4bf; --k-anagram: #facc15; --k-cloze: #4ade80; --k-unjumble: #fb7185; --k-words: #818cf8; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #13121f; --sheet: #1d1c2e; --ink: #eeedf8; --muted: #a5a2c4; --line: #33314d;
+  --ok: #4ade94; --ok-soft: #133a28; --bad: #ff7b70; --bad-soft: #45201d;
+  --k-match: #a78bfa; --k-quiz: #60a5fa; --k-tf: #fb923c; --k-whack: #f472b6; --k-type: #2dd4bf; --k-anagram: #facc15; --k-cloze: #4ade80; --k-unjumble: #fb7185; --k-words: #818cf8; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.5; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 16px; padding-block: 20px 60px; }
+header { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+.top { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px; }
+.eyebrow { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--k-words); font-weight: 700; }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(30px, 5.5vw, 48px); line-height: 1.02; margin: 4px 0 0; text-wrap: balance; }
+.total { font-variant-numeric: tabular-nums; color: var(--muted); font-size: 15px; }
+.total b { color: var(--ink); font-size: 24px; font-family: var(--display); }
+.stripe { display: flex; gap: 4px; }
+.stripe button { all: unset; cursor: pointer; flex: 1; height: 12px; border-radius: 4px; background: color-mix(in srgb, var(--c) 22%, var(--sheet)); border: 1.5px solid var(--c); }
+.stripe button.done { background: var(--c); }
+.stripe button.on { outline: 2px solid var(--ink); outline-offset: 2px; }
+.stripe button:focus-visible { outline: 2px solid var(--ink); }
+.app { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 20px; align-items: start; }
+nav { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); max-height: calc(100vh - 40px); overflow: auto; display: flex; flex-direction: column; gap: 3px; }
+nav button { all: unset; cursor: pointer; display: grid; grid-template-columns: 30px 1fr auto; gap: 8px; align-items: center; padding: 7px 10px; border-radius: 10px; font-size: 15px; line-height: 1.25; color: var(--ink); }
+nav button:hover { background: color-mix(in srgb, var(--c) 12%, transparent); }
+nav button:focus-visible { outline: 2px solid var(--c); }
+nav button.on { background: color-mix(in srgb, var(--c) 16%, var(--sheet)); font-weight: 600; }
+nav .n { width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; font-variant-numeric: tabular-nums; font-size: 13px; font-weight: 700; background: color-mix(in srgb, var(--c) 18%, var(--sheet)); color: var(--c); }
+nav button.on .n { background: var(--c); color: var(--sheet); }
+nav .sc { font-size: 12px; font-variant-numeric: tabular-nums; padding: 1px 7px; border-radius: 99px; background: var(--line); color: var(--muted); }
+nav .sc:empty { display: none; }
+nav .sc.full { background: var(--ok-soft); color: var(--ok); font-weight: 700; }
+nav .sep { margin: 10px 10px 4px; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+.picker { display: none; }
+.sheet { --c: var(--k-words); position: relative; background: var(--sheet); border: 1px solid var(--line); border-top: 8px solid var(--c); border-radius: 16px; padding: clamp(18px, 3vw, 32px); min-width: 0; overflow: hidden; }
+.sheet h2 { font-family: var(--display); font-weight: 800; font-size: clamp(24px, 3.4vw, 32px); margin: 8px 0 6px; text-wrap: balance; }
+.howto { color: var(--muted); margin: 0 0 22px; max-width: 65ch; }
+.kind { display: inline-block; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--sheet); background: var(--c); padding: 3px 10px; border-radius: 99px; }
+.items { display: flex; flex-direction: column; gap: 20px; }
+.item { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding-left: 12px; border-left: 3px solid color-mix(in srgb, var(--c) 30%, transparent); }
+.q { font-weight: 600; }
+.q .num { color: var(--c); font-variant-numeric: tabular-nums; margin-right: 6px; font-weight: 800; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn, .opt, .chip, .tile { font: inherit; color: var(--ink); background: var(--sheet); border: 2px solid color-mix(in srgb, var(--c) 30%, var(--line)); border-radius: 10px; padding: 7px 13px; cursor: pointer; line-height: 1.3; }
+.opt:hover:not(:disabled), .chip:hover:not(:disabled), .tile:hover:not(:disabled) { border-color: var(--c); background: color-mix(in srgb, var(--c) 8%, var(--sheet)); }
+.opt:focus-visible, .chip:focus-visible, .btn:focus-visible, .tile:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--c); outline-offset: 2px; }
+.opt:disabled, .chip:disabled { cursor: default; }
+.ok { background: var(--ok-soft) !important; border-color: var(--ok) !important; color: var(--ok) !important; font-weight: 600; }
+.bad { background: var(--bad-soft) !important; border-color: var(--bad) !important; color: var(--bad) !important; }
+.sel { background: color-mix(in srgb, var(--c) 18%, var(--sheet)) !important; border-color: var(--c) !important; }
+.miss { border-style: dashed !important; border-color: var(--ok) !important; color: var(--ok) !important; }
+.btn.primary { background: var(--c); border-color: var(--c); color: var(--sheet); font-weight: 700; }
+.btn.primary:disabled { opacity: .45; cursor: default; }
+.btn.ghost { background: transparent; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.fb { font-size: 15px; font-weight: 600; }
+.fb.okt { color: var(--ok); } .fb.badt { color: var(--bad); }
+.fb .hint { font-weight: 400; }
+input[type=text] { font: inherit; color: var(--ink); background: color-mix(in srgb, var(--c) 6%, var(--sheet)); border: 2px solid color-mix(in srgb, var(--c) 30%, var(--line)); border-radius: 10px; padding: 7px 11px; width: min(100%, 380px); }
+input.ok, input.bad { font-weight: 600; }
+select { font: inherit; font-weight: 600; color: var(--c); background: color-mix(in srgb, var(--c) 10%, var(--sheet)); border: 2px solid color-mix(in srgb, var(--c) 40%, var(--line)); border-radius: 8px; padding: 1px 4px; max-width: 100%; }
+.cloze { line-height: 2.4; max-width: 72ch; }
+.bank { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 16px; padding: 12px; background: color-mix(in srgb, var(--c) 9%, var(--sheet)); border-radius: 12px; }
+.bank span { font-size: 15px; font-weight: 600; padding: 2px 10px; border-radius: 99px; border: 1.5px solid color-mix(in srgb, var(--c) 40%, var(--line)); background: var(--sheet); }
+.match { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px 14px; }
+.match .col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.match .chip { text-align: left; width: 100%; position: relative; padding-left: 36px; min-height: 44px; }
+.match .chip .tag { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; border-radius: 50%; font-size: 11px; font-weight: 700; display: grid; place-items: center; background: var(--line); color: var(--muted); font-variant-numeric: tabular-nums; }
+.match .chip.paired .tag { background: var(--c); color: var(--sheet); }
+.answer-line { min-height: 48px; display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; border: 2px dashed color-mix(in srgb, var(--c) 45%, var(--line)); border-radius: 12px; background: color-mix(in srgb, var(--c) 5%, var(--sheet)); }
+.tiles { display: flex; flex-wrap: wrap; gap: 6px; }
+.tile { min-width: 42px; text-align: center; font-weight: 800; font-size: 18px; text-transform: lowercase; background: color-mix(in srgb, var(--c) 14%, var(--sheet)); }
+.tile:disabled { opacity: .25; }
+.hint { color: var(--muted); font-size: 15px; }
+.foot { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 28px; padding-top: 18px; border-top: 2px dashed var(--line); }
+.result { font-family: var(--display); font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--c); }
+table.words { width: 100%; border-collapse: collapse; font-size: 16px; }
+table.words td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.words tr:nth-child(even) td { background: color-mix(in srgb, var(--k-words) 5%, var(--sheet)); }
+table.words td:first-child { font-weight: 700; width: 44%; color: var(--k-words); }
+.tw { overflow-x: auto; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+.legend span { font-size: 13px; font-weight: 600; padding: 3px 10px; border-radius: 99px; color: var(--c); background: color-mix(in srgb, var(--c) 13%, var(--sheet)); }
+.confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.confetti i { position: absolute; top: -12px; width: 9px; height: 14px; border-radius: 2px; opacity: .9; }
+@media (prefers-reduced-motion: no-preference) {
+  .opt, .chip, .tile, nav button { transition: background .12s, border-color .12s; }
+  .confetti i { animation: fall 1.6s ease-in forwards; }
+  @keyframes fall { to { transform: translateY(520px) rotate(540deg); opacity: 0; } }
+}
+@media (prefers-reduced-motion: reduce) { .confetti { display: none; } }
+@media (max-width: 820px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  nav { display: none; }
+  .picker { display: block; margin-bottom: 12px; }
+  .picker select { width: 100%; padding: 10px; font-size: 16px; border-radius: 10px; color: var(--ink); }
+  .match { grid-template-columns: minmax(0, 1fr); }
+}
+.card { perspective: 1200px; width: 100%; max-width: 620px; height: 270px; margin: 0 auto; cursor: pointer; }
+.card-in { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; }
+.card.flipped .card-in { transform: rotateY(180deg); }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 24px; border-radius: 20px; text-align: center; }
+.face .lbl { position: absolute; top: 14px; left: 18px; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; opacity: .8; }
+.face .tip { position: absolute; bottom: 12px; font-size: 13px; opacity: .75; }
+.face .big { font-family: var(--display); font-weight: 800; font-size: clamp(24px, 4.6vw, 36px); line-height: 1.15; text-wrap: balance; }
+.front { background: var(--c); color: var(--sheet); }
+.back { background: color-mix(in srgb, var(--c) 12%, var(--sheet)); color: var(--ink); border: 3px solid var(--c); transform: rotateY(180deg); }
+.card:focus-visible { outline: 3px solid var(--c); outline-offset: 4px; border-radius: 20px; }
+.cardbar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; align-items: center; margin-top: 16px; }
+.cardbar .count { font-family: var(--display); font-weight: 800; font-variant-numeric: tabular-nums; min-width: 84px; text-align: center; }
+.btn.know { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); font-weight: 700; }
+.btn.learn { background: color-mix(in srgb, var(--k-tf) 14%, var(--sheet)); border-color: var(--k-tf); color: var(--k-tf); font-weight: 700; }
+.btn.say { font-weight: 700; }
+.toggles { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 16px; }
+.toggles .btn.on { background: var(--c); border-color: var(--c); color: var(--sheet); font-weight: 700; }
+.bar { height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; max-width: 620px; margin: 0 auto 16px; }
+.bar i { display: block; height: 100%; background: var(--ok); }
+.keys { text-align: center; color: var(--muted); font-size: 14px; margin-top: 14px; }
+.spk { font: inherit; font-size: 14px; border: 1.5px solid var(--line); background: var(--sheet); color: var(--k-words); border-radius: 8px; padding: 2px 8px; cursor: pointer; margin-left: 8px; }
+.spk:focus-visible { outline: 2px solid var(--k-words); }
+@media (prefers-reduced-motion: no-preference) { .card-in { transition: transform .45s; } }
+@media (max-width: 820px) { .card { height: 240px; } }
+.fb.partt { color: var(--c); }
+.endcol { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.review { display: flex; flex-direction: column; gap: 6px; width: 100%; margin-top: 4px; }
+.rv { font-size: 15px; padding: 6px 10px; border-radius: 8px; display: flex; flex-wrap: wrap; gap: 4px 6px; align-items: baseline; }
+.rv.rv-ok { background: var(--ok-soft); color: var(--ok); }
+.rv.rv-bad { background: var(--bad-soft); color: var(--bad); }
+.rv .ans { color: var(--ink); font-weight: 600; flex-basis: 100%; }
+.item.rv-ok { border-left-color: var(--ok); }
+.item.rv-bad { border-left-color: var(--bad); }
+.gapn { font-size: 11px; font-weight: 700; color: var(--c); margin: 0 2px 0 4px; }
+.foot { align-items: flex-start; }
+.match .lcol .chip { background: color-mix(in srgb, var(--c) 14%, var(--sheet)); border-color: color-mix(in srgb, var(--c) 50%, var(--line)); font-weight: 600; }
+.match .rcol .chip { background: color-mix(in srgb, var(--k-type) 10%, var(--sheet)); border-color: color-mix(in srgb, var(--k-type) 45%, var(--line)); }
+.match .rcol .chip .tag { background: color-mix(in srgb, var(--k-type) 25%, var(--sheet)); color: var(--k-type); }
+.match .rcol .chip.paired .tag { background: var(--k-type); color: var(--sheet); }
+.colh { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; font-weight: 800; color: var(--c); padding: 2px 4px; }
+.rcol .colh { color: var(--k-type); }
+@media (max-width: 820px) { .match .rcol { margin-top: 14px; padding-top: 14px; border-top: 2px dashed var(--line); } }
+/* Pastel theme: the teacher's palette as fills (--p-*), deeper tones of the same hues for text and borders (--k-*) */
+:root {
+  --k-match: #7a2fa5; --k-quiz: #735600; --k-tf: #6e5b00; --k-whack: #a8326e; --k-type: #08707a; --k-anagram: #8a4a00; --k-cloze: #146f4b; --k-unjumble: #0f6f64; --k-words: #5a3fc0;
+  --p-match: #f5e3ff; --p-quiz: #fff2c3; --p-tf: #fff9d7; --p-whack: #ffe2f2; --p-type: #d1f8fd; --p-anagram: #ffe9d1; --p-cloze: #d8f9e9; --p-unjumble: #d6fbf2; --p-words: #f1e6ff;
+  --p: var(--p-words);
+  --ok: #146f4b; --ok-soft: #c6f8e5; --bad: #b3261e; --bad-soft: #ffe1ea;
+  --bg: #fffbfe; --line: #efdff0; --ink: #2a2440; --muted: #6a6386;
+  --g1: #e0fbee; --g2: #fff5d4; --g3: #daf9fe; --g4: #ffedf9; --g5: #fffae0;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --k-match: #d9a8f0; --k-quiz: #f0d27a; --k-tf: #f0e08a; --k-whack: #f2a6c4; --k-type: #8eeef5; --k-anagram: #ffc497; --k-cloze: #8fe8c4; --k-unjumble: #8ff0dc; --k-words: #c6b4ff;
+  --p-match: #3a2a4a; --p-quiz: #3d3420; --p-tf: #3d3820; --p-whack: #46293a; --p-type: #1f3d42; --p-anagram: #45321f; --p-cloze: #1f3d33; --p-unjumble: #1d3d39; --p-words: #332c52;
+  --ok: #8fe8c4; --ok-soft: #1f3d33; --bad: #ff9a8f; --bad-soft: #46293a;
+  --bg: #16141f; --line: #36304a; --ink: #f1eefa; --muted: #b0a9c8;
+  --g1: #2a1c2a; --g2: #241d36; --g3: #172331; --g4: #15262a; --g5: #2e2a17; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --k-match: #d9a8f0; --k-quiz: #f0d27a; --k-tf: #f0e08a; --k-whack: #f2a6c4; --k-type: #8eeef5; --k-anagram: #ffc497; --k-cloze: #8fe8c4; --k-unjumble: #8ff0dc; --k-words: #c6b4ff;
+  --p-match: #3a2a4a; --p-quiz: #3d3420; --p-tf: #3d3820; --p-whack: #46293a; --p-type: #1f3d42; --p-anagram: #45321f; --p-cloze: #1f3d33; --p-unjumble: #1d3d39; --p-words: #332c52;
+  --ok: #8fe8c4; --ok-soft: #1f3d33; --bad: #ff9a8f; --bad-soft: #46293a;
+  --bg: #16141f; --line: #36304a; --ink: #f1eefa; --muted: #b0a9c8;
+  --g1: #2a1c2a; --g2: #241d36; --g3: #172331; --g4: #15262a; --g5: #2e2a17; color-scheme: dark }
+body { background: var(--bg) linear-gradient(160deg, var(--g1) 0%, var(--g2) 30%, var(--g3) 58%, var(--g4) 82%, var(--g5) 100%) fixed; }
+.sheet { border-radius: 22px; }
+.btn, .opt, .chip, .tile, input[type=text] { border-radius: 14px; }
+.xtile { border-radius: 20px; }
+.kind { background: var(--p); color: var(--c); }
+.sheet { border-top: 10px solid var(--p); box-shadow: 0 8px 26px color-mix(in srgb, var(--c) 7%, transparent); }
+.item { border-left-color: var(--p); }
+.btn, .opt, .chip, .tile { border-color: var(--p); }
+.opt:hover:not(:disabled), .chip:hover:not(:disabled), .tile:hover:not(:disabled) { border-color: var(--c); background: color-mix(in srgb, var(--p) 55%, var(--sheet)); }
+.sel { background: var(--p) !important; border-color: var(--c) !important; }
+.tile { background: var(--p); color: var(--ink); }
+.bank, .answer-line { background: color-mix(in srgb, var(--p) 45%, var(--sheet)); }
+.bank span { border-color: var(--p); }
+.answer-line { border-color: var(--p); }
+input[type=text], select { background: color-mix(in srgb, var(--p) 30%, var(--sheet)); border-color: var(--p); }
+nav button:hover { background: color-mix(in srgb, var(--p) 60%, transparent); }
+nav button.on { background: var(--p); }
+nav .n { background: var(--p); color: var(--c); }
+nav button.on .n { background: var(--c); color: var(--sheet); }
+.stripe button { background: var(--p); border-color: color-mix(in srgb, var(--c) 45%, var(--p)); }
+.stripe button.done { background: var(--c); border-color: var(--c); }
+.legend span { background: var(--p); color: var(--c); }
+table.words tr:nth-child(even) td { background: color-mix(in srgb, var(--p-words) 40%, var(--sheet)); }
+.match .lcol .chip { background: color-mix(in srgb, var(--p) 70%, var(--sheet)); border-color: var(--p); }
+.match .rcol .chip { background: color-mix(in srgb, var(--p-type) 60%, var(--sheet)); border-color: var(--p-type); }
+.front { background: var(--p); color: var(--ink); }
+.front .big { color: var(--c); }
+.back { background: var(--sheet); border-color: var(--p); }
+.bar i { background: var(--k-cloze); }
+.teacher { display: flex; align-items: center; gap: 12px; background: color-mix(in srgb, var(--sheet) 75%, transparent); border: 1px solid var(--line); border-radius: 999px; padding: 6px 18px 6px 6px; }
+.teacher img { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; padding: 3px; border: 5px solid transparent; background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(135deg, var(--frame-a), var(--frame-b)) border-box; box-sizing: content-box; flex: none; }
+.tname { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--k-words); }
+.welcome { display: flex; align-items: center; gap: 18px; padding: 16px 18px; margin: 0 0 22px; border-radius: 18px; background: linear-gradient(120deg, var(--frame-a), var(--frame-b)); color: var(--ink); }
+.welcome img { width: 136px; height: 136px; border-radius: 50%; object-fit: cover; border: 4px solid var(--sheet); flex: none; }
+.welcome b { font-family: var(--display); font-size: 24px; font-weight: 800; }
+.welcome p { margin: 4px 0 0; max-width: 60ch; }
+@media (max-width: 520px) { .teacher img { width: 72px; height: 72px; } .welcome img { width: 120px; height: 120px; } .welcome { flex-direction: column; text-align: center; } .teacher { border-radius: 18px; } }
+.homeh { font-family: var(--display); font-weight: 800; font-size: 20px; margin: 22px 0 10px; }
+.tilegrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+.xtile { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; gap: 6px; min-height: 120px; padding: 14px; border-radius: 16px; background: var(--p); border: 2px solid var(--p); color: var(--ink); }
+.xtile:hover { border-color: var(--c); transform: translateY(-2px); }
+.xtile:focus-visible { outline: 3px solid var(--c); outline-offset: 2px; }
+.xtop { display: flex; justify-content: space-between; align-items: center; }
+.xnum { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; background: var(--sheet); color: var(--c); font-weight: 800; font-variant-numeric: tabular-nums; }
+.xsc { font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 99px; background: var(--sheet); color: var(--muted); font-variant-numeric: tabular-nums; }
+.xsc.full { color: var(--ok); }
+.xtitle { font-weight: 700; line-height: 1.25; }
+.xlabel { margin-top: auto; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; font-weight: 700; color: var(--c); }
+@media (prefers-reduced-motion: no-preference) { .xtile { transition: transform .12s, border-color .12s; } }
+@media (max-width: 520px) { .tilegrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; } .xtile { min-height: 110px; padding: 12px; } }
+.tid { font-size: 15px; color: var(--ink); }
+.tid a { color: var(--k-whack); font-weight: 600; text-decoration: none; }
+.tid a:hover { text-decoration: underline; }
+.credit { margin-top: 28px; padding: 18px 20px; border-radius: 20px; background: color-mix(in srgb, var(--sheet) 70%, transparent); border: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; }
+.credit p { margin: 0; color: var(--muted); font-size: 15px; min-width: 0; }
+.credit p b { color: var(--ink); }
+.credit-links { display: flex; flex-wrap: wrap; gap: 10px; }
+.credit a { display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-weight: 700; padding: 9px 16px; border-radius: 14px; }
+.credit a.book { background: var(--k-whack); color: var(--sheet); }
+.credit a.book:hover { filter: brightness(1.08); }
+.credit a.ig { background: var(--p-whack); color: var(--k-whack); border: 2px solid var(--p-whack); }
+.credit a.ig:hover { border-color: var(--k-whack); }
+.credit a:focus-visible, .tid a:focus-visible { outline: 3px solid var(--k-whack); outline-offset: 2px; }
+/* Photo frame: fixed colours chosen by the teacher; they stay the same whatever the palette */
+:root { --frame-1: #d1f8fd; --frame-2: #ffe2f2; --frame-a: #d8f9e9; --frame-b: #fff2c3; --brand-red: #d0101c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --brand-red: #ff6b6b; } }
+:root[data-theme="dark"] { --brand-red: #ff6b6b; }
+.welcome { color: #2a2440; }
+h1, .welcome b, .homeh { color: var(--brand-red); }
+.sendbox { margin-top: 26px; padding: 18px 20px; border-radius: 20px; background: linear-gradient(120deg, var(--frame-a), var(--frame-b)); color: #2a2440; display: flex; flex-direction: column; gap: 8px; }
+.sendbox .homeh { margin: 0; }
+.sendbox .hint { margin: 0 0 4px; color: #4a4466; }
+.sendbox.compact { margin-top: 6px; padding: 14px 16px; }
+.slab { font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #4a4466; }
+.sendbox input[type=text] { background: #ffffff; color: #2a2440; }
+.sendbtn { text-decoration: none; display: inline-flex; align-items: center; }
+.sendbox .btn:not(.primary) { background: #ffffff; color: #2a2440; }
+.copyta { width: 100%; min-height: 120px; font: inherit; font-size: 14px; border-radius: 10px; padding: 8px; }
+/* Additions for this trainer: open cloze (turquoise), reading-style passage, parts, rules */
+:root { --k-open: var(--k-type); --p-open: var(--p-type); }
+.cloze { white-space: pre-line; }
+.passage { background: var(--p-words); border-radius: 18px; padding: 16px 20px; margin: 0 0 22px; line-height: 1.75; max-width: 75ch; color: var(--ink); }
+.passage b { color: var(--k-words); }
+input.gapin { width: auto; min-width: 60px; padding: 1px 8px; margin: 0 2px; font-size: 16px; line-height: 1.4; border-width: 2px; border-radius: 10px; }
+.cloze:has(input.gapin) { line-height: 2.3; }
+.q b { color: var(--c); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.parth { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; font-weight: 800; color: var(--muted); margin: 18px 0 8px; }
+.rules h3 { font-family: var(--display); font-weight: 800; font-size: 22px; margin: 26px 0 8px; color: var(--k-words); }
+.rules h4 { font-weight: 700; font-size: 18px; margin: 18px 0 6px; }
+.rules p, .rules li { max-width: 72ch; }
+.rules ul { margin: 6px 0; padding-left: 22px; }
+.rules .ex { color: var(--muted); font-style: italic; }
+.rules .note { background: var(--p-words); border-radius: 14px; padding: 10px 14px; margin: 10px 0; }
+.rules table { border-collapse: collapse; width: 100%; font-size: 16px; margin: 8px 0; }
+.rules th, .rules td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+.rules th { background: var(--p-words); color: var(--k-words); font-size: 14px; letter-spacing: .04em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="top">
+      <div>
+        <div class="eyebrow">Revision</div>
+        <h1>SpeakOut C1 (Unit 1A/B) Revision</h1>
+      </div>
+      <div class="teacher"><img id="tphoto" src="data:image/jpeg;base64,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" alt="Your English teacher" width="88" height="88"><div><div class="tname">Your English teacher</div><div class="tid"><b>Oksana</b> · <a href="https://www.instagram.com/oksana.eng.teacher/" target="_blank" rel="noopener">@oksana.eng.teacher</a></div><div class="total" id="total"></div></div></div>
+    </div>
+    <div class="stripe" id="stripe" aria-label="Progress"></div>
+  </header>
+  <div class="picker"><select id="picker" aria-label="Choose an exercise"></select></div>
+  <div class="app">
+    <nav id="nav" aria-label="Exercises"></nav>
+    <main class="sheet" id="sheet"></main>
+  </div>
+  <footer class="credit">
+    <p>Exercises created by <b>Oksana</b>, English teacher · General &amp; Business English · НМТ/ЄВІ · FCE · CAE · IELTS</p>
+    <div class="credit-links">
+      <a class="book" href="https://docs.google.com/forms/d/e/1FAIpQLSc9pepwmM_e4oCU2o3pxMaAbX2VAh3PPjlBnO5V95CKQdEvQQ/viewform?usp=header" target="_blank" rel="noopener">Book a lesson</a>
+      <a class="ig" href="https://www.instagram.com/oksana.eng.teacher/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"></circle></svg>Instagram @oksana.eng.teacher</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+const DATA = {"words": [["spot on", "абсолютно точно, в саму точку"], ["ring true", "звучати правдиво, викликати довіру"], ["an element of truth", "частка правди"], ["a complete fallacy", "цілковита омана, хибне уявлення"], ["patently not true", "очевидна неправда"], ["a sweeping statement", "огульне, надто узагальнене твердження"], ["vacuous comments", "порожні, беззмістовні коментарі"], ["way too oversimplistic", "надто спрощений"], ["strike a chord with sb", "зачепити за живе, знайти відгук у когось"], ["trot out trite phrases", "механічно повторювати заяложені фрази"], ["make sense", "мати сенс, здаватися логічним"], ["throw in the towel", "здатися, опустити руки"], ["change tack", "змінити підхід, тактику"], ["be cut out for sth", "бути створеним для чогось"], ["fly in the face of sth", "суперечити чомусь, іти всупереч"], ["make (great) strides", "досягати значних успіхів"], ["get hung up about sth", "зациклюватися на чомусь, надто перейматися"], ["have your fair share of sth", "мати свою (чималу) частку чогось"], ["knock sb's confidence", "підірвати чиюсь впевненість"], ["go along with sth", "погоджуватися з чимось, приймати"], ["give it a good go", "добре постаратися, серйозно спробувати"], ["pat sb on the back", "похвалити когось"], ["the learning curve", "процес навчання, опанування нового"], ["be on board with sth", "підтримувати щось, бути «за»"], ["put your heart and soul into sth", "вкласти душу в щось"], ["see where sb is coming from", "розуміти чиюсь позицію"], ["dwell on sth", "довго думати про щось, зациклюватися"], ["get nowhere", "нічого не досягти"], ["have what it takes", "мати все необхідне (для успіху)"], ["get real", "спустись на землю, будь реалістом"], ["lose it", "втратити самовладання, зірватися"], ["give it your all", "викластися на повну"], ["clear-cut", "чіткий, однозначний"], ["fit for purpose", "придатний для своєї мети"], ["hold sway", "мати вплив, панувати"], ["offload sth (to sb/sth)", "перекласти (завдання, тягар) на когось / щось"], ["the crux (of sth)", "суть, головне питання"], ["across the board", "повсюдно, для всіх без винятку"], ["set sb apart (from)", "вирізняти когось (з-поміж інших)"], ["galling", "прикрий, принизливий"], ["dire consequences", "жахливі наслідки"], ["on trend", "модний, у тренді"], ["twaddle", "нісенітниця"], ["get a break", "отримати свій шанс"], ["relinquish", "(неохоче) відмовитися від, поступитися (владою, контролем)"], ["the fount of all knowledge", "джерело всіх знань"], ["the dim and distant past", "далеке минуле"], ["a long time coming", "довгоочікуваний, що довго назрівав"], ["uniquely placed to…", "мати унікальні можливості, щоб…"], ["throw up (new problems)", "породжувати (нові проблеми)"], ["be born out of sth", "виникнути з чогось"], ["bear in mind", "пам'ятати, враховувати"], ["lurch forward", "різко, ривками рухатися вперед"], ["get to the heart of sth", "дістатися до суті чогось"], ["pass on (the savings)", "передати (заощадження) далі"], ["be equipped with sth", "мати щось від природи, бути наділеним чимось"], ["on-the-spot", "на місці, одразу, без підготовки"], ["rob sb of sth", "позбавити когось чогось"], ["develop a nurturing environment", "створювати турботливе, сприятливе середовище"], ["find your own path", "знайти свій шлях"], ["strive for excellence", "прагнути досконалості"], ["foster good relationships", "розвивати добрі стосунки"], ["fulfil your potential", "розкрити свій потенціал"], ["deliver a quality curriculum", "забезпечувати якісну навчальну програму"], ["maintain rigorous standards", "підтримувати суворі, високі стандарти"], ["take the initiative", "проявити ініціативу"], ["establish mutual respect", "встановити взаємоповагу"], ["focus on individuality", "зосереджуватися на індивідуальності"], ["blended learning", "змішане навчання (онлайн + в класі)"], ["continuous assessment", "поточне оцінювання"], ["critical thinking", "критичне мислення"], ["external accreditation", "зовнішня акредитація"], ["peer assessment", "взаємооцінювання"], ["rote learning", "механічне заучування, зубріння"], ["student loan", "студентський кредит"], ["tuition fees", "плата за навчання"], ["virtual learning environment", "віртуальне навчальне середовище"], ["vocational training", "професійне навчання"], ["cringe-worthy", "такий, що від нього ніяково; сороміцький"], ["conventional wisdom", "загальноприйнята думка"], ["embrace", "охоче прийняти (щось нове)"], ["inherently", "за своєю суттю, від природи"], ["legacy", "спадщина, те, що залишаєш після себе"], ["mess up", "зіпсувати, напартачити"], ["mismatch", "невідповідність"], ["privileged", "привілейований"], ["reassess", "переоцінити, переглянути"], ["trappings (of success)", "атрибути (успіху)"], ["unprecedented", "безпрецедентний"], ["visualise", "уявляти, візуалізувати"], ["entrap", "заманити в пастку"], ["resent", "обурюватися, ображатися (через несправедливість)"], ["facilitator", "фасилітатор — той, хто допомагає навчатися"], ["empathetic", "емпатичний, здатний співчувати"], ["first aid", "перша допомога"], ["intervention", "втручання"], ["murmur", "пробурмотіти, тихо сказати"], ["numerous", "численний"], ["pastime", "улюблене заняття, хобі"], ["persistence", "наполегливість"], ["self-reflection", "самоаналіз, саморефлексія"], ["sew", "шити, пришивати"], ["tarsals", "кістки передплесна (стопи)"], ["undervalued", "недооцінений"], ["worthy", "гідний, заслужений"], ["a shift to", "перехід до, зсув у бік"], ["at a rapid pace", "швидкими темпами"], ["by no means", "аж ніяк не"], ["differ", "відрізнятися"], ["heads down", "схиливши голови, зосереджено"], ["in light of", "з огляду на"], ["it bugs me", "мене дратує"], ["kick off", "розпочати"], ["lay out", "викласти, детально пояснити"], ["prevent sb from (doing) sth", "завадити комусь (робити) щось"], ["pursue a career (in)", "будувати кар'єру (в)"], ["set out", "викласти, визначити (правила, план)"], ["settle on", "зупинитися на (виборі)"], ["the best way forward", "найкращий шлях уперед"], ["valid for", "дійсний, придатний для"]], "exercises": [{"part": "Part 1 · Describing attitudes (1A)", "type": "match", "title": "Attitude Phrases: Match the Meanings", "items": [["spot on", "exactly right"], ["ring true", "seem believable or genuine"], ["an element of truth", "a partly true idea"], ["a complete fallacy", "a belief that is entirely false, based on wrong reasoning"], ["patently not true", "obviously and clearly false"], ["a sweeping statement", "a generalisation that ignores exceptions"], ["vacuous comments", "remarks that lack thought, meaning or intelligence"], ["way too oversimplistic", "reducing something complex far too much"], ["strike a chord with somebody", "make someone feel a personal connection because of their own experience"], ["trot out trite phrases", "repeat clichéd expressions automatically, without thinking"], ["make sense", "seem logical or reasonable"]]}, {"type": "whack", "title": "Sort the Phrases: Choose All Correct", "items": [{"q": "The speaker thinks the idea is TRUE.", "opts": [{"t": "spot on", "ok": true}, {"t": "rings true", "ok": true}, {"t": "makes sense", "ok": true}, {"t": "strikes a chord", "ok": true}, {"t": "a complete fallacy", "ok": false}, {"t": "patently not true", "ok": false}, {"t": "vacuous comments", "ok": false}, {"t": "trite phrases", "ok": false}]}, {"q": "The speaker thinks the idea is only PARTIALLY TRUE.", "opts": [{"t": "an element of truth", "ok": true}, {"t": "way too oversimplistic", "ok": true}, {"t": "spot on", "ok": false}, {"t": "a complete fallacy", "ok": false}, {"t": "patently not true", "ok": false}, {"t": "rings true", "ok": false}]}, {"q": "The speaker thinks the idea is COMPLETELY WRONG.", "opts": [{"t": "a complete fallacy", "ok": true}, {"t": "patently not true", "ok": true}, {"t": "an element of truth", "ok": false}, {"t": "rings true", "ok": false}, {"t": "makes sense", "ok": false}, {"t": "spot on", "ok": false}]}, {"q": "The speaker criticises HOW people express ideas (empty, clichéd, too general).", "opts": [{"t": "a sweeping statement", "ok": true}, {"t": "vacuous comments", "ok": true}, {"t": "trite phrases", "ok": true}, {"t": "spot on", "ok": false}, {"t": "makes sense", "ok": false}, {"t": "patently not true", "ok": false}, {"t": "an element of truth", "ok": false}]}]}, {"type": "type", "title": "Attitude Phrases: First Letter Given", "how": "Complete each sentence with ONE word. The first letter is given. Press Enter or Check.", "items": [{"q": "I wouldn't say she's completely wrong – there's an e______ of truth in what she says.", "a": ["element"]}, {"q": "His speech was full of v______ comments about ‘living your best life’ that meant absolutely nothing.", "a": ["vacuous"]}, {"q": "Politicians always t______ out the same trite phrases about ‘hard-working families’.", "a": ["trot"]}, {"q": "Your analysis of the problem is s______ on – I couldn't have put it better myself.", "a": ["spot"]}, {"q": "The claim that we only use 10% of our brains is a complete f______.", "a": ["fallacy"]}, {"q": "‘All teenagers are lazy’ is a typical s______ statement.", "a": ["sweeping"]}, {"q": "Her story about moving abroad alone really s______ a chord with me.", "a": ["struck", "strikes"]}, {"q": "His excuse didn't r______ true – nobody believed him.", "a": ["ring"]}, {"q": "It's p______ not true that you can learn a language in your sleep.", "a": ["patently"]}, {"q": "Blaming everything on social media is w______ too oversimplistic.", "a": ["way"]}, {"q": "It m______ sense to revise little and often rather than cramming the night before.", "a": ["makes"]}]}, {"type": "type", "title": "Attitude Phrases: Correct the Mistake", "how": "The part in bold is wrong. Type the correct word(s) to replace it (or type the whole correct sentence). Press Enter or Check.", "items": [{"q": "Her comments really **hit** a chord with me.", "a": ["struck", "strike", "struck a chord", "strike a chord", "Her comments really struck a chord with me."]}, {"q": "There's an **item** of truth in what he says.", "a": ["element", "an element", "There's an element of truth in what he says."]}, {"q": "The idea that money brings happiness is a **fully** fallacy.", "a": ["complete", "a complete fallacy", "total", "an utter", "The idea that money brings happiness is a complete fallacy."]}, {"q": "He always **trots in** the same trite phrases when things go wrong.", "a": ["trots out", "He always trots out the same trite phrases when things go wrong."]}, {"q": "Your answer is **dot on** – well done!", "a": ["spot on", "spot", "Your answer is spot on – well done!"]}, {"q": "It's **patiently** not true that boys are better at maths than girls.", "a": ["patently", "It's patently not true that boys are better at maths than girls."]}, {"q": "Her explanation **rings real** to me.", "a": ["rings true", "true", "Her explanation rings true to me."]}, {"q": "Stop making such **swept** statements about my generation!", "a": ["sweeping", "Stop making such sweeping statements about my generation!"]}, {"q": "That idea is **way much** oversimplistic.", "a": ["way too", "too", "That idea is way too oversimplistic."]}, {"q": "Her suggestion **makes a sense** – let's try it.", "a": ["makes sense", "Her suggestion makes sense – let's try it."]}]}, {"type": "type", "title": "Attitude Phrases: Complete the Second Sentence", "how": "Complete the second sentence so that it means the same as the first. Use the word in CAPITALS. Press Enter or Check.", "items": [{"q": "I completely agree with your analysis; it's exactly right. (SPOT) → Your analysis is ______.", "a": ["spot on"]}, {"q": "What she said reminded me of my own experience and I felt moved. (CHORD) → What she said really ______ me.", "a": ["struck a chord with", "strikes a chord with"]}, {"q": "This claim is partly true. (ELEMENT) → There's ______ in this claim.", "a": ["an element of truth"]}, {"q": "It's obvious that this is false. (PATENTLY) → This is ______ true.", "a": ["patently not"]}, {"q": "Advertisers keep repeating the same old clichés. (TROT) → Advertisers keep ______ the same trite phrases.", "a": ["trotting out"]}, {"q": "This explanation simplifies the problem far too much. (WAY) → This explanation is ______ oversimplistic.", "a": ["way too"]}, {"q": "The idea that you can't teach an old dog new tricks is completely wrong. (FALLACY) → The idea that you can't teach an old dog new tricks is ______.", "a": ["a complete fallacy", "a total fallacy", "an utter fallacy"]}, {"q": "His excuse didn't sound convincing. (RING) → His excuse didn't ______.", "a": ["ring true"]}]}, {"type": "quiz", "title": "React to the Statement: Choose the Best Reply", "how": "Read the statement. Choose the reply that uses the phrase in a logical way. If it is wrong, try again.", "items": [{"q": "“Everyone who uses social media is addicted to it.”", "opts": [{"t": "That's a sweeping statement – lots of people just use it to keep in touch.", "ok": true}, {"t": "That's spot on – lots of people just use it to keep in touch.", "ok": false}, {"t": "That really strikes a chord – nobody I know uses it.", "ok": false}]}, {"q": "“Practice makes perfect.”", "opts": [{"t": "There's an element of truth in it, but it's way too oversimplistic – practising the wrong way doesn't help.", "ok": true}, {"t": "It's a complete fallacy, so I practise every single day.", "ok": false}, {"t": "It's patently not true, and that's exactly why I agree.", "ok": false}]}, {"q": "“Learn fluent English in 30 days with our app!”", "opts": [{"t": "That's a complete fallacy – nobody becomes fluent in a month.", "ok": true}, {"t": "That rings true – nobody becomes fluent in a month.", "ok": false}, {"t": "That makes sense – nobody becomes fluent in a month.", "ok": false}]}, {"q": "“Older people can't learn new technology.”", "opts": [{"t": "That's patently not true – my grandma video-calls us every day.", "ok": true}, {"t": "That's spot on – my grandma video-calls us every day.", "ok": false}, {"t": "That strikes a chord – my grandma video-calls us every day.", "ok": false}]}, {"q": "“Talent is overrated – hard work is everything.”", "opts": [{"t": "It rings true for me – I've seen hard-working people overtake more talented ones.", "ok": true}, {"t": "It doesn't ring true for me – I've seen hard-working people overtake more talented ones.", "ok": false}, {"t": "It rings true for me – hard work never changes anything.", "ok": false}]}, {"q": "“Failure is just part of the journey.”", "opts": [{"t": "People trot out trite phrases like this to make you feel better, but it doesn't help much.", "ok": true}, {"t": "People trot out trite phrases like this because they've thought about it very deeply.", "ok": false}, {"t": "It's a trite phrase, so it must be spot on.", "ok": false}]}, {"q": "“A good teacher learns from their students too.”", "opts": [{"t": "You're spot on – I learn a lot from my students.", "ok": true}, {"t": "You're spot on – teachers never learn anything from students.", "ok": false}, {"t": "That's a complete fallacy – I learn a lot from my students.", "ok": false}]}, {"q": "A friend says she sometimes feels like an impostor at her new job.", "opts": [{"t": "What you said really struck a chord with me – I felt exactly the same in my first job.", "ok": true}, {"t": "What you said is a sweeping statement – I felt exactly the same in my first job.", "ok": false}, {"t": "What you said is patently not true – I felt exactly the same in my first job.", "ok": false}]}]}, {"part": "Part 2 · Idioms & expressions (1A)", "type": "cloze", "title": "Idioms: Fill the Gaps", "text": "1. Don't get so **hung** up about your accent – people understand you perfectly.\n2. I'm not sure I can go **along** with the decision to cancel the trip.\n3. Every new manager has had their fair **share** of difficult employees.\n4. I've never tried rock climbing, but I'm willing to give it a **good** go.\n5. After a week as a waiter, I knew I wasn't **cut** out for customer service.\n6. Our team has made huge **strides** in reducing waste this year.\n7. These findings **fly** in the face of everything we thought we knew.\n8. When the first approach failed, the researchers **changed** tack.\n9. After three failed attempts, she finally **threw** in the towel.\n10. Being criticised in front of everyone really **knocked** my confidence.", "distract": ["made", "put", "fell"]}, {"type": "quiz", "title": "Idioms: Choose the Meaning", "items": [{"q": "throw in the towel", "opts": [{"t": "give up", "ok": true}, {"t": "start again", "ok": false}, {"t": "lose your temper", "ok": false}]}, {"q": "change tack", "opts": [{"t": "try a different approach", "ok": true}, {"t": "apologise", "ok": false}, {"t": "slow down", "ok": false}]}, {"q": "be cut out for something", "opts": [{"t": "have the right qualities for it", "ok": true}, {"t": "be excluded from it", "ok": false}, {"t": "be bored by it", "ok": false}]}, {"q": "fly in the face of something", "opts": [{"t": "go directly against it", "ok": true}, {"t": "confirm it", "ok": false}, {"t": "ignore it politely", "ok": false}]}, {"q": "make strides", "opts": [{"t": "make real progress", "ok": true}, {"t": "walk away", "ok": false}, {"t": "make mistakes", "ok": false}]}, {"q": "get hung up about something", "opts": [{"t": "worry about it too much", "ok": true}, {"t": "forget it", "ok": false}, {"t": "end a phone call angrily", "ok": false}]}, {"q": "have your fair share of something", "opts": [{"t": "a normal amount (usually of something unpleasant)", "ok": true}, {"t": "much more than other people", "ok": false}, {"t": "none at all", "ok": false}]}, {"q": "knock somebody's confidence", "opts": [{"t": "damage it", "ok": true}, {"t": "boost it", "ok": false}, {"t": "test it", "ok": false}]}, {"q": "go along with something", "opts": [{"t": "accept or agree with it", "ok": true}, {"t": "only accompany someone", "ok": false}, {"t": "strongly oppose it", "ok": false}]}, {"q": "give it a good go", "opts": [{"t": "make a real effort to try", "ok": true}, {"t": "leave quickly", "ok": false}, {"t": "give something away", "ok": false}]}]}, {"type": "type", "title": "Idioms: Key Word Transformation", "how": "Complete the second sentence so that it means the same as the first. Use the word in CAPITALS and 3–6 words. Press Enter or Check.", "items": [{"q": "Ben decided to give up the course after the first term. (TOWEL) → Ben ______ after the first term.", "a": ["threw in the towel", "decided to throw in the towel"]}, {"q": "I really don't have the right personality to be a teacher. (CUT) → I'm really ______ a teacher.", "a": ["not cut out to be", "not cut out to be a teacher"]}, {"q": "Losing the match damaged the players' self-belief. (KNOCKED) → Losing the match ______.", "a": ["knocked the players' confidence", "knocked the players' self-confidence", "knocked their confidence"]}, {"q": "Don't worry so much about small details. (HUNG) → Don't ______ small details.", "a": ["get so hung up about", "get so hung up over", "get so hung up on", "get hung up about", "get hung up over", "get hung up on"]}, {"q": "The school has made significant progress in improving results. (STRIDES) → The school ______ in improving results.", "a": ["has made strides", "has made great strides", "has made huge strides", "has made significant strides", "has made big strides", "has made enormous strides", "has made real strides", "has made considerable strides", "has made major strides"]}, {"q": "His theory contradicts all the scientific evidence. (FACE) → His theory ______ all the scientific evidence.", "a": ["flies in the face of"]}, {"q": "I'll try my best, even though I've never done it before. (GO) → I'll ______, even though I've never done it before.", "a": ["give it a good go"]}, {"q": "When plan A failed, we tried a completely different approach. (TACK) → When plan A failed, we ______.", "a": ["changed tack", "changed tack completely", "completely changed tack"]}, {"q": "I'm happy to accept whatever the group decides. (ALONG) → I'm happy ______ the group decides.", "a": ["to go along with whatever", "to go along with what"]}, {"q": "I've experienced quite a lot of setbacks in my career. (SHARE) → I've ______ setbacks in my career.", "a": ["had my fair share of", "had more than my fair share of", "had my share of"]}]}, {"type": "type", "title": "Expressions from the Texts: Type the Expression", "how": "Complete each sentence with an expression from the box. Change the form if necessary (verb tense, pronoun). Press Enter or Check.", "bank": ["pat (sb) on the back", "the learning curve", "be on board with", "put your heart and soul into", "see where sb is coming from", "dwell on", "get nowhere", "have what it takes", "get real", "lose it", "give it your all", "clear-cut"], "items": [{"q": "I know the first month in a new job is hard – it's all part of ______.", "a": ["the learning curve"]}, {"q": "I can ______, but I still disagree with you.", "a": ["see where you're coming from"]}, {"q": "She ______ that project, so the rejection really hurt.", "a": ["put her heart and soul into", "had put her heart and soul into"]}, {"q": "Are the parents ______ the new homework policy?", "a": ["on board with"]}, {"q": "There's no point ______ the past – focus on what you can change.", "a": ["dwelling on", "in dwelling on"]}, {"q": "If we keep arguing like this, we'll ______.", "a": ["get nowhere"]}, {"q": "Do you think he ______ to become a professional musician?", "a": ["has what it takes"]}, {"q": "Oh, ______! Nobody is going to pay that much for a used phone.", "a": ["get real"]}, {"q": "If my neighbour plays the drums at 3 a.m. one more time, I'm going to ______.", "a": ["lose it"]}, {"q": "The coach told us to ______ in the final – no holding back.", "a": ["give it our all", "give it all"]}, {"q": "Our manager ______ for meeting the deadline.", "a": ["patted us on the back", "patted us all on the back", "patted everyone on the back", "patted the team on the back"]}, {"q": "The answer isn't as ______ as it seems; there are lots of grey areas.", "a": ["clear-cut"]}]}, {"type": "match", "title": "Expressions from the Texts: Match the Meanings", "items": [["fit for purpose", "good enough for the job it is meant to do"], ["hold sway", "have great influence or power"], ["offload", "pass a task or burden to someone or something else"], ["the crux (of sth)", "the most important, central point"], ["across the board", "affecting everyone or everything"], ["set sb apart", "make sb different from or better than others"], ["galling", "annoying and humiliating"], ["dire consequences", "very serious, terrible results"], ["on trend", "fashionable at the moment"], ["twaddle", "nonsense"], ["get a break", "a lucky opportunity that helps your career"], ["relinquish", "give up power or control, usually unwillingly"]]}, {"type": "cloze", "title": "Expressions from the Texts: Fill the Gaps", "text": "1. Is our current exam system really **fit for purpose** for the 21st century?\n2. Traditional teaching methods still **hold sway** in many schools.\n3. Prices have risen **across the board** – food, energy, transport.\n4. It was **galling** to see my rival get the promotion I'd worked so hard for.\n5. The **crux** of the problem is that nobody takes responsibility.\n6. Ignoring climate change could have **dire consequences**.\n7. What really **set her apart** from other candidates was her creativity.\n8. Most actors work for years before they **get a break**.\n9. Don't believe that **twaddle** about learning English in your sleep.\n10. We're trying to **offload** routine tasks to software so staff can focus on clients.\n11. Old habits die hard – people rarely **relinquish** control easily.\n12. Self-reflection is very **on trend** at the moment – everyone's journaling.", "distract": ["hold back", "heart"]}, {"part": "Part 3 · Conditional forms (1A)", "type": "quiz", "title": "Conditional Forms: Choose the Answer", "items": [{"q": "You can join the project ___ you're on board with the plan.", "opts": [{"t": "provided", "ok": true}, {"t": "unless", "ok": false}, {"t": "even if", "ok": false}]}, {"q": "___ you ever feel like throwing in the towel, call me first.", "opts": [{"t": "Should", "ok": true}, {"t": "Were", "ok": false}, {"t": "Had", "ok": false}]}, {"q": "I'm going to give it a good go, ___ I pass or not.", "opts": [{"t": "whether", "ok": true}, {"t": "unless", "ok": false}, {"t": "provided", "ok": false}]}, {"q": "___ his drama teacher's intervention, he would never have tried acting.", "opts": [{"t": "But for", "ok": true}, {"t": "Unless", "ok": false}, {"t": "Providing", "ok": false}]}, {"q": "You'll get nowhere ___ you change tack.", "opts": [{"t": "unless", "ok": true}, {"t": "as long as", "ok": false}, {"t": "provided", "ok": false}]}, {"q": "___ persistence, you won't make real strides.", "opts": [{"t": "Without", "ok": true}, {"t": "Unless", "ok": false}, {"t": "But for", "ok": false}]}, {"q": "She agreed to take part ___ condition that her name wasn't mentioned.", "opts": [{"t": "on", "ok": true}, {"t": "in", "ok": false}, {"t": "with", "ok": false}]}, {"q": "I wouldn't go along with that idea ___ my boss insisted.", "opts": [{"t": "even if", "ok": true}, {"t": "unless", "ok": false}, {"t": "provided", "ok": false}]}, {"q": "___ I to fail the exam again, I'd reassess my study methods.", "opts": [{"t": "Were", "ok": true}, {"t": "Should", "ok": false}, {"t": "Had", "ok": false}]}, {"q": "___ we known the course was so rigorous, we'd have prepared better.", "opts": [{"t": "Had", "ok": true}, {"t": "Were", "ok": false}, {"t": "Should", "ok": false}]}, {"q": "Failure isn't a problem ___ long as you learn from it.", "opts": [{"t": "as", "ok": true}, {"t": "so far", "ok": false}, {"t": "provided", "ok": false}]}, {"q": "If it ___ for his love of the game, he'd have given up years ago.", "opts": [{"t": "hadn't been", "ok": true}, {"t": "weren't", "ok": false}, {"t": "isn't", "ok": false}]}]}, {"type": "open", "title": "Mixed Conditionals: Complete the Verbs", "how": "Write the correct form of the verbs in brackets in each gap. Press Enter (or Tab) to check each gap.", "text": "1. If I **hadn't dwelt|hadn't dwelled** (not / dwell) on that mistake for so long, I **wouldn't feel|wouldn't be feeling** (not / feel) so stressed now.\n2. If she **weren't|wasn't** (not / be) so hung up about her accent, she **would have spoken** (speak) up in the meeting yesterday.\n3. If we **hadn't taken** (not / take) out a student loan, we **wouldn't be studying|wouldn't study** (not / study) at this university now.\n4. If he **were|was** (be) cut out for teaching, he **wouldn't have changed** (not / change) tack after just one year.\n5. If I **had pursued** (pursue) a career in law, I **would be earning|would earn** (earn) much more money now.\n6. If you **weren't|wasn't** (not / be) so stubborn, you **would have gone** (go) along with our plan yesterday.\n7. If the school **hadn't fostered** (not / foster) good relationships from the start, the students **wouldn't feel|wouldn't be feeling** (not / feel) so happy there now.\n8. If I **hadn't promised** (not / promise) to help my sister, I **would go|would be going** (go) to the concert tomorrow."}, {"type": "quiz", "title": "Mixed Conditionals: Choose the Correct Sentence", "how": "Read the situation. Choose the mixed conditional sentence that is correct. If it is wrong, try again.", "items": [{"q": "Tom threw in the towel after the first term. He doesn't have a degree now.", "opts": [{"t": "If Tom hadn't thrown in the towel after the first term, he would have a degree now.", "ok": true}, {"t": "If Tom didn't throw in the towel after the first term, he would have had a degree now.", "ok": false}, {"t": "If Tom hadn't thrown in the towel after the first term, he will have a degree now.", "ok": false}]}, {"q": "She's very shy. She didn't speak up in the meeting.", "opts": [{"t": "If she weren't so shy, she would have spoken up in the meeting.", "ok": true}, {"t": "If she isn't so shy, she would have spoken up in the meeting.", "ok": false}, {"t": "If she weren't so shy, she would speak up in the meeting yesterday.", "ok": false}]}, {"q": "Failing the test knocked his confidence. He's afraid to try again now.", "opts": [{"t": "If failing the test hadn't knocked his confidence, he wouldn't be afraid to try again now.", "ok": true}, {"t": "If failing the test didn't knock his confidence, he wouldn't have been afraid to try again now.", "ok": false}, {"t": "If failing the test hadn't knocked his confidence, he won't be afraid to try again now.", "ok": false}]}, {"q": "I'm not cut out for sales. I didn't apply for that job.", "opts": [{"t": "If I were cut out for sales, I would have applied for that job.", "ok": true}, {"t": "If I am cut out for sales, I would have applied for that job.", "ok": false}, {"t": "If I were cut out for sales, I applied for that job.", "ok": false}]}, {"q": "We moved to Lviv in 2015. We know the city very well.", "opts": [{"t": "If we hadn't moved to Lviv in 2015, we wouldn't know the city so well.", "ok": true}, {"t": "If we didn't move to Lviv in 2015, we wouldn't have known the city so well now.", "ok": false}, {"t": "If we hadn't moved to Lviv in 2015, we won't know the city so well.", "ok": false}]}, {"q": "Kate isn't a patient person. She gave up after two lessons.", "opts": [{"t": "If Kate were more patient, she wouldn't have given up after two lessons.", "ok": true}, {"t": "If Kate is more patient, she wouldn't have given up after two lessons.", "ok": false}, {"t": "If Kate were more patient, she didn't give up after two lessons.", "ok": false}]}, {"q": "My teacher treated my mistakes as learning opportunities. I'm not afraid of failure now.", "opts": [{"t": "If my teacher hadn't treated my mistakes as learning opportunities, I would be afraid of failure now.", "ok": true}, {"t": "If my teacher didn't treat my mistakes as learning opportunities, I would have been afraid of failure now.", "ok": false}, {"t": "If my teacher hadn't treated my mistakes as learning opportunities, I will be afraid of failure now.", "ok": false}]}, {"q": "Jay can't stand trite phrases. He didn't enjoy the motivational talk.", "opts": [{"t": "If Jay could stand trite phrases, he would have enjoyed the motivational talk.", "ok": true}, {"t": "If Jay can stand trite phrases, he would have enjoyed the motivational talk.", "ok": false}, {"t": "If Jay could stand trite phrases, he would enjoy the motivational talk yesterday.", "ok": false}]}]}, {"type": "type", "title": "Inversion: Rewrite without IF", "how": "Rewrite the beginning of the sentence in a more formal way, without if. Type only the missing part. Press Enter or Check.", "items": [{"q": "If you had told me the course was so rigorous, I would have prepared better. → ______, I would have prepared better.", "a": ["Had you told me the course was so rigorous", "Had you told me that the course was so rigorous"]}, {"q": "If you should need more information about tuition fees, please contact us. → ______ about tuition fees, please contact us.", "a": ["Should you need more information", "Should you need any more information", "Should you need further information"]}, {"q": "If the government were to raise tuition fees, there would be protests. → ______, there would be protests.", "a": ["Were the government to raise tuition fees"]}, {"q": "If I had known how difficult it was, I wouldn't have started. → ______, I wouldn't have started.", "a": ["Had I known how difficult it was", "Had I known how difficult it would be"]}, {"q": "If anyone calls, tell them I'm in a meeting. → ______, tell them I'm in a meeting.", "a": ["Should anyone call"]}, {"q": "If we were to analyse these sayings, we'd find that many of them are complete fallacies. → ______, we'd find that many of them are complete fallacies.", "a": ["Were we to analyse these sayings", "Were we to analyze these sayings"]}, {"q": "If she hadn't been so tired, she would have noticed the mistake. → ______, she would have noticed the mistake.", "a": ["Had she not been so tired"]}, {"q": "If it hadn't been for his drama teacher, he would never have risked going into acting. → ______, he would never have risked going into acting.", "a": ["Had it not been for his drama teacher"]}]}, {"type": "type", "title": "If It Weren't For / But For / Without: Complete the Result", "how": "Complete each sentence with the correct form of the words in brackets. Press Enter or Check.", "items": [{"q": "My teacher encouraged me, so I didn't throw in the towel. → If it hadn't been for my teacher's encouragement, I ______ in the towel. (throw)", "a": ["would have thrown"]}, {"q": "I have a terrible sense of direction, so I always get lost. → If it weren't for my terrible sense of direction, I ______ lost. (not / always / get)", "a": ["wouldn't always get"]}, {"q": "Your help saved the project. → But for your help, the project ______. (fail)", "a": ["would have failed"]}, {"q": "The traffic is awful, so I'm always late for work. → If it weren't for the awful traffic, I ______ late for work. (not / always / be)", "a": ["wouldn't always be"]}, {"q": "Peer assessment helped me spot my mistakes. → Without peer assessment, I ______ my mistakes. (not / spot)", "a": ["wouldn't have spotted", "couldn't have spotted"]}, {"q": "My parents supported me financially, so I could study abroad. → But for my parents' financial support, I ______ abroad. (not / can / study)", "a": ["couldn't have studied", "wouldn't have been able to study"]}, {"q": "Social media is full of vacuous comments, so I rarely use it. → If it weren't for all the vacuous comments, I ______ social media more often. (use)", "a": ["would use", "'d use"]}, {"q": "She has a strong accent – otherwise she would sound like a native speaker. → If it weren't for her strong accent, she ______ like a native speaker. (sound)", "a": ["would sound"]}]}, {"type": "type", "title": "Conditional Forms: Key Word Transformation", "how": "Complete the second sentence so that it means the same as the first. Use the word in CAPITALS and 2–6 words. Press Enter or Check.", "items": [{"q": "I'll lend you my notes, but only if you return them tomorrow. (PROVIDED) → I'll lend you my notes ______ them tomorrow.", "a": ["provided you return", "provided that you return", "provided you give back"]}, {"q": "You won't make real strides unless you practise regularly. (IF) → You won't make real strides ______ regularly.", "a": ["if you don't practise", "if you don't practice"]}, {"q": "We'll go hiking even if it rains. (WHETHER) → We'll go hiking ______.", "a": ["whether it rains or not", "whether or not it rains"]}, {"q": "If you don't have a student loan, you can't afford the tuition fees. (WITHOUT) → ______, you can't afford the tuition fees.", "a": ["Without a student loan"]}, {"q": "You can join the team if you attend every training session. (CONDITION) → You can join the team ______ every training session.", "a": ["on condition that you attend", "on condition you attend", "on the condition that you attend"]}, {"q": "It's unlikely, but if you see Anna, say hi from me. (SHOULD) → ______ Anna, say hi from me.", "a": ["Should you see", "Should you happen to see"]}, {"q": "Imagine you lost your job – what would you do? (WERE) → If you ______ your job, what would you do?", "a": ["were to lose"]}, {"q": "He'd have thrown in the towel if his coach hadn't supported him. (BUT) → ______ support, he'd have thrown in the towel.", "a": ["But for his coach's"]}, {"q": "You can use my laptop, but only if you're careful. (LONG) → You can use my laptop ______ careful.", "a": ["as long as you're", "so long as you're", "as long as you are", "so long as you are"]}, {"q": "I'll go along with the plan unless it costs too much. (PROVIDING) → I'll go along with the plan ______ too much.", "a": ["providing it doesn't cost", "providing that it doesn't cost"]}]}, {"type": "type", "title": "Conditional Forms: Correct the Mistake", "how": "The part in bold is wrong. Type the correct words to replace it. Press Enter or Check.", "items": [{"q": "If I **would have known** the course was so rigorous, I would have prepared better.", "a": ["had known"]}, {"q": "Should you **will need** anything, call me.", "a": ["need"]}, {"q": "**Unless you don't change** tack, you'll get nowhere.", "a": ["Unless you change", "If you don't change"]}, {"q": "**Were I know** the answer, I'd tell you.", "a": ["Were I to know", "If I knew"]}, {"q": "**But for she intervened**, I'd have given up.", "a": ["But for her intervention", "If it hadn't been for her intervention", "Without her intervention", "But for her"]}, {"q": "If it **wasn't** for my brother, I would never have become an engineer.", "a": ["hadn't been", "had not been"]}, {"q": "Providing you **will finish** your homework, you can go out.", "a": ["finish"]}, {"q": "**Without to have** critical thinking skills, you can't evaluate information properly.", "a": ["Without", "Without having"]}, {"q": "If I were to **winning** the competition, I'd donate the prize.", "a": ["win"]}, {"q": "Had they not **be** so hung up about details, they would have finished on time.", "a": ["been"]}]}, {"type": "unjumble", "title": "Conditional Forms: Build the Sentence", "items": [{"s": "Had we known the course was so rigorous, we would have prepared better."}, {"s": "Should you ever feel like throwing in the towel, call me first."}, {"s": "Were I to fail the exam again, I would reassess my study methods."}, {"s": "But for his drama teacher's intervention, he would never have tried acting."}, {"s": "You can join the project provided that you're on board with the plan."}, {"s": "If it hadn't been for his love of the game, he would have given up."}, {"s": "You'll get nowhere unless you change tack."}, {"s": "Had she not been so hung up about details, she would have finished on time."}]}, {"part": "Part 4 · Education collocations (1B)", "type": "match", "title": "Education Collocations: Match the Halves", "items": [["developing", "a nurturing environment"], ["finding", "your own path"], ["striving for", "excellence"], ["fostering", "good relationships"], ["fulfilling", "your potential"], ["delivering", "a quality curriculum"], ["maintaining", "rigorous standards"], ["taking", "the initiative"], ["establishing", "mutual respect"], ["focusing on", "individuality"]]}, {"type": "type", "title": "Education Collocations: Type the Collocation", "how": "Complete each sentence with a collocation from the box. Change the form if necessary. Press Enter or Check.", "bank": ["develop a nurturing environment", "find your own path", "strive for excellence", "foster good relationships", "fulfil your potential", "deliver a quality curriculum", "maintain rigorous standards", "take the initiative", "establish mutual respect", "focus on individuality"], "items": [{"q": "Instead of waiting for instructions, the new intern ______ and organised the files herself.", "a": ["took the initiative"]}, {"q": "A good school can't just let everyone pass – it has to ______.", "a": ["maintain rigorous standards"]}, {"q": "Team-building activities help ______ between colleagues.", "a": ["foster good relationships", "to foster good relationships"]}, {"q": "My grandmother never stopped ______ – even at 80 she wanted to do everything perfectly.", "a": ["striving for excellence"]}, {"q": "Many talented kids never ______ because nobody believes in them.", "a": ["fulfil their potential", "fulfill their potential"]}, {"q": "It took me years to ______ – I studied law, then design, before becoming a chef.", "a": ["find my own path"]}, {"q": "Teachers and students need to ______ before real learning can happen.", "a": ["establish mutual respect"]}, {"q": "A good kindergarten should ______ where children feel safe and supported.", "a": ["develop a nurturing environment"]}, {"q": "Rather than treating all learners the same, modern education is ______.", "a": ["focusing on individuality"]}, {"q": "The university is committed to ______ that prepares graduates for the job market.", "a": ["delivering a quality curriculum"]}]}, {"type": "quiz", "title": "Education Collocations: Same Meaning", "how": "Choose the collocation that completes the second sentence with the same meaning.", "items": [{"q": "She always tries to be the very best at what she does. → She's always ___.", "opts": [{"t": "striving for excellence", "ok": true}, {"t": "establishing mutual respect", "ok": false}, {"t": "finding her own path", "ok": false}, {"t": "taking the initiative", "ok": false}]}, {"q": "The teacher wants the students to get on well with each other. → The teacher wants to ___ among the students.", "opts": [{"t": "foster good relationships", "ok": true}, {"t": "focus on individuality", "ok": false}, {"t": "deliver a quality curriculum", "ok": false}, {"t": "maintain rigorous standards", "ok": false}]}, {"q": "He never waits to be told what to do. → He always ___.", "opts": [{"t": "takes the initiative", "ok": true}, {"t": "fulfils his potential", "ok": false}, {"t": "finds his own path", "ok": false}, {"t": "maintains rigorous standards", "ok": false}]}, {"q": "I want to become as good as I can possibly be. → I want to ___.", "opts": [{"t": "fulfil my potential", "ok": true}, {"t": "take the initiative", "ok": false}, {"t": "foster good relationships", "ok": false}, {"t": "establish mutual respect", "ok": false}]}, {"q": "The school treats every child as a unique person. → The school ___.", "opts": [{"t": "focuses on individuality", "ok": true}, {"t": "maintains rigorous standards", "ok": false}, {"t": "takes the initiative", "ok": false}, {"t": "delivers a quality curriculum", "ok": false}]}, {"q": "Our club has very strict and demanding rules about quality. → Our club ___.", "opts": [{"t": "maintains rigorous standards", "ok": true}, {"t": "fosters good relationships", "ok": false}, {"t": "focuses on individuality", "ok": false}, {"t": "finds its own path", "ok": false}]}, {"q": "Teenagers need time to discover what really interests them in life. → Teenagers need time to ___.", "opts": [{"t": "find their own path", "ok": true}, {"t": "deliver a quality curriculum", "ok": false}, {"t": "maintain rigorous standards", "ok": false}, {"t": "take the initiative", "ok": false}]}, {"q": "The courses at this college are of a very high standard. → The college ___.", "opts": [{"t": "delivers a quality curriculum", "ok": true}, {"t": "finds its own path", "ok": false}, {"t": "takes the initiative", "ok": false}, {"t": "establishes mutual respect", "ok": false}]}]}, {"part": "Part 5 · Compound nouns (1B)", "type": "cloze", "title": "Compound Nouns: Fill the Gaps", "text": "1. In many countries, university **tuition fees** have risen so much that students graduate with huge debts.\n2. I took out a **student loan** to pay for my master's degree.\n3. Instead of one final exam, our grade is based on **continuous assessment** throughout the year.\n4. The **virtual learning environment** has all the lecture slides, quizzes and discussion forums.\n5. Learning poems by heart is a classic example of **rote learning**.\n6. Not everyone wants a degree – **vocational training** in plumbing or electrics can lead to a well-paid career.\n7. Our course combines online modules and classroom sessions – it's **blended learning**.\n8. The language school received **external accreditation** from an independent organisation.\n9. In **peer assessment**, students mark and comment on each other's work.\n10. Employers value **critical thinking** – the ability to analyse problems and evaluate information.", "distract": ["entrance exam", "lifelong learning"]}, {"type": "quiz", "title": "Compound Nouns: Choose the Verb", "items": [{"q": "___ out a student loan", "opts": [{"t": "take", "ok": true}, {"t": "make", "ok": false}, {"t": "do", "ok": false}]}, {"q": "___ tuition fees", "opts": [{"t": "pay", "ok": true}, {"t": "spend", "ok": false}, {"t": "give", "ok": false}]}, {"q": "___ critical thinking skills", "opts": [{"t": "develop", "ok": true}, {"t": "make", "ok": false}, {"t": "grow", "ok": false}]}, {"q": "___ external accreditation", "opts": [{"t": "gain", "ok": true}, {"t": "make", "ok": false}, {"t": "do", "ok": false}]}, {"q": "___ vocational training", "opts": [{"t": "undergo", "ok": true}, {"t": "pass", "ok": false}, {"t": "make", "ok": false}]}, {"q": "___ out peer assessment in class", "opts": [{"t": "carry", "ok": true}, {"t": "make", "ok": false}, {"t": "take", "ok": false}]}]}, {"type": "tf", "title": "Compound Nouns: True or False", "items": [{"q": "Rote learning means learning by repeating things until you remember them, often without understanding.", "a": ["True"]}, {"q": "Peer assessment means that only the teacher marks the students' work.", "a": ["False"]}, {"q": "Blended learning combines online study with classroom lessons.", "a": ["True"]}, {"q": "Tuition fees are money that a bank lends to students.", "a": ["False"]}, {"q": "Continuous assessment means that your grade depends on one final exam.", "a": ["False"]}, {"q": "Vocational training prepares you for a particular job or trade.", "a": ["True"]}, {"q": "A virtual learning environment is an online platform with materials, quizzes and forums.", "a": ["True"]}, {"q": "Critical thinking means accepting information without questioning it.", "a": ["False"]}, {"q": "External accreditation is official approval from an independent organisation.", "a": ["True"]}, {"q": "If you take out a student loan, you don't have to pay it back.", "a": ["False"]}]}, {"part": "Part 6 · Nominal relative clauses (1B)", "type": "quiz", "title": "Nominal Relative Clauses: Choose the Word", "items": [{"q": "___ you decide, I'll go along with it.", "opts": [{"t": "Whatever", "ok": true}, {"t": "Whoever", "ok": false}, {"t": "Where", "ok": false}]}, {"q": "___ trots out that trite phrase again has to buy everyone coffee!", "opts": [{"t": "Whoever", "ok": true}, {"t": "What", "ok": false}, {"t": "Whichever", "ok": false}]}, {"q": "Call me ___ you need to talk – day or night.", "opts": [{"t": "whenever", "ok": true}, {"t": "whatever", "ok": false}, {"t": "whoever", "ok": false}]}, {"q": "___ hard I try, I can't remember people's names.", "opts": [{"t": "However", "ok": true}, {"t": "Whatever", "ok": false}, {"t": "Whenever", "ok": false}]}, {"q": "This is exactly ___ I was afraid of.", "opts": [{"t": "what", "ok": true}, {"t": "whatever", "ok": false}, {"t": "that", "ok": false}]}, {"q": "Blended learning or face-to-face classes – choose ___ suits you better.", "opts": [{"t": "whichever", "ok": true}, {"t": "whoever", "ok": false}, {"t": "whenever", "ok": false}]}, {"q": "I don't understand ___ she threw in the towel so suddenly.", "opts": [{"t": "why", "ok": true}, {"t": "what", "ok": false}, {"t": "whichever", "ok": false}]}, {"q": "Can you show me ___ to log into the virtual learning environment?", "opts": [{"t": "how", "ok": true}, {"t": "what", "ok": false}, {"t": "whichever", "ok": false}]}, {"q": "This is ___ we first met – in this very café.", "opts": [{"t": "where", "ok": true}, {"t": "what", "ok": false}, {"t": "whenever", "ok": false}]}, {"q": "___ I need right now is a long holiday.", "opts": [{"t": "What", "ok": true}, {"t": "Whatever", "ok": false}, {"t": "That", "ok": false}]}, {"q": "___ you look at it, it was a bad decision.", "opts": [{"t": "However", "ok": true}, {"t": "Whatever", "ok": false}, {"t": "Whenever", "ok": false}]}, {"q": "You can invite ___ you like to the party.", "opts": [{"t": "whoever", "ok": true}, {"t": "what", "ok": false}, {"t": "however", "ok": false}]}]}, {"type": "type", "title": "Nominal Relative Clauses: One Word Instead of Two", "how": "Replace the words in bold with ONE word (what, whoever, whenever, whatever, whichever, however, why, where). Type the missing word. Press Enter or Check.", "items": [{"q": "**The thing that** bugs me most is people being late. → ______ bugs me most is people being late.", "a": ["What"]}, {"q": "**Anyone who** finishes first can leave. → ______ finishes first can leave.", "a": ["Whoever"]}, {"q": "**Any time that** I feel stuck, I change tack. → ______ I feel stuck, I change tack.", "a": ["Whenever"]}, {"q": "I'll go along with **anything that** you decide. → I'll go along with ______ you decide.", "a": ["whatever"]}, {"q": "Of these two courses, take **the one that** you prefer. → Of these two courses, take ______ you prefer.", "a": ["whichever"]}, {"q": "**The things that** he said made no sense. → ______ he said made no sense.", "a": ["What"]}, {"q": "**In any way that** you do it, do it carefully. → ______ you do it, do it carefully.", "a": ["However"]}, {"q": "**The person who** makes the big educational decisions has set out a new curriculum. → ______ makes the big educational decisions has set out a new curriculum.", "a": ["Whoever"]}, {"q": "I don't know **the reason that** she's upset. → I don't know ______ she's upset.", "a": ["why"]}, {"q": "Tell me **the place where** you hid the keys. → Tell me ______ you hid the keys.", "a": ["where"]}]}, {"type": "type", "title": "Emphasis with WHAT: Rewrite the Sentence", "how": "Rewrite each sentence beginning with What … to emphasise the idea. Type the whole sentence. Press Enter or Check.", "items": [{"q": "I need a cup of coffee.", "a": ["What I need is a cup of coffee."]}, {"q": "Her attitude surprised me.", "a": ["What surprised me was her attitude."]}, {"q": "He wants to find his own path.", "a": ["What he wants is to find his own path.", "What he wants to do is find his own path.", "What he wants to do is to find his own path."]}, {"q": "Constant criticism knocks your confidence.", "a": ["What knocks your confidence is constant criticism."]}, {"q": "I don't understand his reasoning.", "a": ["What I don't understand is his reasoning."]}, {"q": "We should focus on individuality.", "a": ["What we should focus on is individuality."]}, {"q": "Sweeping statements irritate Jay.", "a": ["What irritates Jay is sweeping statements.", "What irritates Jay are sweeping statements."]}, {"q": "Rob's comments struck a chord with me.", "a": ["What struck a chord with me was Rob's comments.", "What struck a chord with me were Rob's comments."]}]}, {"type": "type", "title": "Nominal Relative Clauses: Complete the Replies", "how": "Complete each reply with ONE word. Press Enter or Check.", "items": [{"q": "A: Shall we meet at the station? B: That's exactly ______ I was going to suggest.", "a": ["what"]}, {"q": "A: I think the crux of the problem is lack of motivation. B: That's precisely ______ I mean!", "a": ["what"]}, {"q": "A: How about Friday evening? B: Sorry, that's exactly ______ I'm at my yoga class.", "a": ["when"]}, {"q": "A: Did you grow up near the river? B: Yes, that's just ______ our house was.", "a": ["where"]}, {"q": "A: She left because her boss never listened. B: Ah, so that's ______ she resigned!", "a": ["why"]}, {"q": "A: You press here, then swipe left. B: Oh, so that's ______ it works!", "a": ["how"]}, {"q": "A: Pizza or sushi? B: ______ you prefer – I'm easy.", "a": ["Whichever", "Whatever"]}, {"q": "A: Who should I give this form to? B: ______ is at the reception desk.", "a": ["Whoever"]}]}, {"type": "type", "title": "Nominal Relative Clauses: Correct the Mistake", "how": "The word in bold is wrong. Type the correct word to replace it. Press Enter or Check.", "items": [{"q": "It's a book **what** really struck a chord with me.", "a": ["that", "which"]}, {"q": "**Whatever** is elected will serve four years.", "a": ["Whoever"]}, {"q": "**However** you want to leave, just tell me – I'm ready.", "a": ["Whenever"]}, {"q": "I'll support you in **that** you decide to do.", "a": ["what", "whatever"]}, {"q": "This is the town **what** I was born.", "a": ["where"]}, {"q": "**Whoever** course you choose, you'll need persistence.", "a": ["Whichever", "Whatever"]}, {"q": "That's exactly the thing **what** I wanted.", "a": ["that", "which"]}, {"q": "**That** she said was true.", "a": ["What"]}]}, {"part": "Part 7 · Vocabulary from the texts", "type": "type", "title": "Phrases from the Texts: One Missing Word", "how": "Complete the phrases from the texts and audioscripts with ONE word. Press Enter or Check.", "items": [{"q": "Our exam system simply isn't fit for ______ any more.", "a": ["purpose"]}, {"q": "In the past, the teacher was seen as the fount of all ______.", "a": ["knowledge"]}, {"q": "Students sitting in rows copying from the board is something from the dim and ______ past.", "a": ["distant"]}, {"q": "These reforms have been slow and a long time ______.", "a": ["coming"]}, {"q": "With smartphones, we're now offloading information big ______.", "a": ["time"]}, {"q": "Humans are uniquely ______ to empathise and collaborate.", "a": ["placed"]}, {"q": "Every new technology throws ______ new problems.", "a": ["up"]}, {"q": "The STEM approach was born ______ of a mismatch between school and industry.", "a": ["out"]}, {"q": "It's worth bearing ______ mind that many future jobs don't exist yet.", "a": ["in"]}, {"q": "Technology keeps lurching ______ at an incredible rate.", "a": ["forward", "forwards"]}, {"q": "We need to get to the ______ of the issue instead of discussing details.", "a": ["heart"]}, {"q": "When companies save money, they can pass ______ the savings to customers.", "a": ["on"]}, {"q": "Creativity is what sets us humans ______ from machines.", "a": ["apart"]}, {"q": "Children are naturally equipped ______ a sense of inquiry.", "a": ["with"]}, {"q": "OK, on-the-______ time! What do you see in a hundred years?", "a": ["spot"]}, {"q": "If I hear the word ‘journey’ once more, I'm going to ______ it.", "a": ["lose"]}]}, {"type": "cloze", "title": "Words from the Texts: Fill the Gaps", "text": "1. I completely **messed up** my presentation – I forgot half of it.\n2. My first job interview was absolutely **cringe-worthy** – I called the manager by the wrong name.\n3. There's a huge **mismatch** between what universities teach and what employers want.\n4. The pandemic created **unprecedented** challenges for schools all over the world.\n5. Teachers had to **embrace** online tools almost overnight.\n6. He has the big house, the fast car and all the other **trappings** of success.\n7. After failing the exam, she had to **reassess** her study methods.\n8. Ethan believes that human beings are **inherently** self-centred.\n9. According to **conventional wisdom**, you should always do your best.\n10. I know I'm in a **privileged** position – not everyone can choose their job.\n11. Isla wants to leave a **legacy** – stories that stay with readers for years.\n12. Athletes often **visualise** themselves crossing the finish line before a race.", "distract": ["mess up", "embraced", "inherent", "privilege"]}, {"type": "type", "title": "Expressions from the Texts: Key Word Transformation", "how": "Complete the second sentence so that it means the same as the first. Use the word in CAPITALS. Press Enter or Check.", "items": [{"q": "These rules don't really do the job they were designed for. (PURPOSE) → These rules ______.", "a": ["aren't fit for purpose", "aren't really fit for purpose"]}, {"q": "The new tax affects absolutely everyone. (BOARD) → The new tax affects everyone ______.", "a": ["across the board", "right across the board"]}, {"q": "Old-fashioned attitudes are still very influential in many schools. (SWAY) → Old-fashioned attitudes still ______ in many schools.", "a": ["hold sway"]}, {"q": "This is the most important point of the whole debate. (CRUX) → This is ______ of the whole debate.", "a": ["the crux"]}, {"q": "Let's deal with the real cause of the problem. (HEART) → Let's ______ the problem.", "a": ["get to the heart of"]}, {"q": "Remember that most students work part-time. (MIND) → ______ that most students work part-time.", "a": ["Bear in mind", "Keep in mind"]}, {"q": "What makes her different from other singers is her voice. (APART) → What ______ other singers is her voice.", "a": ["sets her apart from"]}, {"q": "Failure can take away your confidence. (ROB) → Failure can ______ your confidence.", "a": ["rob you of"]}, {"q": "We should pass boring, repetitive tasks to machines. (OFFLOAD) → We should ______ to machines.", "a": ["offload boring, repetitive tasks", "offload boring repetitive tasks"]}, {"q": "Every child is born curious. (EQUIPPED) → Every child is ______ a sense of inquiry.", "a": ["naturally equipped with", "equipped with", "born equipped with"]}, {"q": "She tried as hard as she possibly could. (ALL) → She ______.", "a": ["gave it her all"]}, {"q": "I understand why he thinks that, even though I disagree. (COMING) → I can ______, even though I disagree.", "a": ["see where he's coming from"]}]}, {"type": "anagram", "title": "Spelling: Build the Word", "items": [{"w": "galling", "hint": "annoying and unfair, making you feel humiliated"}, {"w": "entrap", "hint": "to trap someone in a bad situation"}, {"w": "unprecedented", "hint": "never having happened before"}, {"w": "embrace", "hint": "to accept something new with enthusiasm"}, {"w": "resent", "hint": "to feel bitter about being treated unfairly"}, {"w": "facilitator", "hint": "a person who helps learning happen rather than lecturing"}, {"w": "lurch", "hint": "to move forward suddenly and unsteadily"}, {"w": "dire", "hint": "very serious, terrible (… consequences)"}, {"w": "relinquish", "hint": "to give up power or control unwillingly"}, {"w": "twaddle", "hint": "nonsense (informal)"}, {"w": "fallacy", "hint": "a belief that is entirely false"}, {"w": "vacuous", "hint": "lacking thought, meaning or intelligence"}]}, {"type": "quiz", "title": "Expressions from the Texts: Choose the Word", "items": [{"q": "Friends patted me on the ___ and told me not to worry.", "opts": [{"t": "back", "ok": true}, {"t": "shoulder", "ok": false}, {"t": "head", "ok": false}]}, {"q": "It's all part of the learning ___.", "opts": [{"t": "curve", "ok": true}, {"t": "line", "ok": false}, {"t": "path", "ok": false}]}, {"q": "Are you ___ board with this idea?", "opts": [{"t": "on", "ok": true}, {"t": "in", "ok": false}, {"t": "at", "ok": false}]}, {"q": "She put her heart and ___ into the project.", "opts": [{"t": "soul", "ok": true}, {"t": "mind", "ok": false}, {"t": "spirit", "ok": false}]}, {"q": "Football managers get their ___ share of criticism.", "opts": [{"t": "fair", "ok": true}, {"t": "full", "ok": false}, {"t": "right", "ok": false}]}, {"q": "Self-reflection is very on ___ at the moment.", "opts": [{"t": "trend", "ok": true}, {"t": "fashion", "ok": false}, {"t": "style", "ok": false}]}, {"q": "It's important not to ___ on failure.", "opts": [{"t": "dwell", "ok": true}, {"t": "stay", "ok": false}, {"t": "sit", "ok": false}]}, {"q": "Give it a good go, but give up if you clearly don't have what it ___.", "opts": [{"t": "takes", "ok": true}, {"t": "needs", "ok": false}, {"t": "makes", "ok": false}]}, {"q": "We need to get ___ about failure.", "opts": [{"t": "real", "ok": true}, {"t": "true", "ok": false}, {"t": "honest", "ok": false}]}, {"q": "Change is happening at a ___ pace.", "opts": [{"t": "rapid", "ok": true}, {"t": "fast", "ok": false}, {"t": "quick", "ok": false}]}, {"q": "Tradition will not be relinquished ___.", "opts": [{"t": "easily", "ok": true}, {"t": "simply", "ok": false}, {"t": "lightly", "ok": false}]}, {"q": "To be successful, you have to be lucky and get a ___ at some point.", "opts": [{"t": "break", "ok": true}, {"t": "chance", "ok": false}, {"t": "step", "ok": false}]}]}, {"part": "Part 8 · Mixed revision", "type": "quiz", "title": "Never Too Late: Choose the Answer", "how": "Read the text. Choose the correct answer for each gap. If it is wrong, try again.", "passage": "I'd always told myself I wasn't **(1)** out for driving. My first attempt at eighteen had **(2)** my confidence so badly that I **(3)** in the towel after three lessons. Twenty years later, I decided to give it a **(4)** go. **(5)** I known how much I'd enjoy it, I would have started years ago! Of course, I've had my fair **(6)** of embarrassing moments – stalling at traffic lights, for example – but I try not to **(7)** on them. My instructor says I'm making real **(8)**. People love to say ‘it's never too late to learn’ – I used to think that was just a **(9)** phrase, but now it really **(10)** true.", "items": [{"q": "Gap 1", "opts": [{"t": "cut", "ok": true}, {"t": "made", "ok": false}, {"t": "put", "ok": false}, {"t": "set", "ok": false}]}, {"q": "Gap 2", "opts": [{"t": "knocked", "ok": true}, {"t": "hit", "ok": false}, {"t": "struck", "ok": false}, {"t": "broken", "ok": false}]}, {"q": "Gap 3", "opts": [{"t": "threw", "ok": true}, {"t": "gave", "ok": false}, {"t": "put", "ok": false}, {"t": "took", "ok": false}]}, {"q": "Gap 4", "opts": [{"t": "good", "ok": true}, {"t": "fine", "ok": false}, {"t": "hard", "ok": false}, {"t": "strong", "ok": false}]}, {"q": "Gap 5", "opts": [{"t": "Had", "ok": true}, {"t": "If", "ok": false}, {"t": "Should", "ok": false}, {"t": "Were", "ok": false}]}, {"q": "Gap 6", "opts": [{"t": "share", "ok": true}, {"t": "part", "ok": false}, {"t": "deal", "ok": false}, {"t": "amount", "ok": false}]}, {"q": "Gap 7", "opts": [{"t": "dwell", "ok": true}, {"t": "hang", "ok": false}, {"t": "stay", "ok": false}, {"t": "rest", "ok": false}]}, {"q": "Gap 8", "opts": [{"t": "strides", "ok": true}, {"t": "steps", "ok": false}, {"t": "walks", "ok": false}, {"t": "paces", "ok": false}]}, {"q": "Gap 9", "opts": [{"t": "trite", "ok": true}, {"t": "blank", "ok": false}, {"t": "sweeping", "ok": false}, {"t": "patent", "ok": false}]}, {"q": "Gap 10", "opts": [{"t": "rings", "ok": true}, {"t": "sounds", "ok": false}, {"t": "strikes", "ok": false}, {"t": "hits", "ok": false}]}]}, {"type": "open", "title": "Is Failure Good for You? Open Cloze", "how": "Write ONE word in each gap. Press Enter (or Tab) to check each gap.", "text": "Many people believe that failure is good for you, but I can't go **along** with that idea entirely. There is certainly an element **of** truth in it: **Had** I not failed my first job interview, I would never **have** realised how badly prepared I was. But **for** that experience, I might still be making the same mistakes today. On the other hand, saying that anyone can achieve anything, **provided|providing|if** they want it badly enough, is patently **not** true. **However** hard you try, some goals will lie outside your ability. **What** really matters is knowing when to change **tack**."}, {"type": "type", "title": "Word Formation", "how": "Complete the sentences with the correct form of the word in CAPITALS. Press Enter or Check.", "items": [{"q": "Recent research shows that comments like these are overly ______. (SIMPLE)", "a": ["simplistic"]}, {"q": "Friends patted her on the back and murmured ______ that it didn't matter. (ASSURE)", "a": ["reassuringly"]}, {"q": "Learning to bounce back from setbacks builds ______. (RESILIENT)", "a": ["resilience"]}, {"q": "The criticism was meant to be ______, but he took it personally. (CONSTRUCT)", "a": ["constructive"]}, {"q": "The school is famous for its ______ standards. (RIGOUR)", "a": ["rigorous"]}, {"q": "Modern education places more emphasis on ______. (INDIVIDUAL)", "a": ["individuality"]}, {"q": "She found real ______ in teaching children to read. (FULFIL)", "a": ["fulfilment", "fulfillment"]}, {"q": "The college strives for ______ in everything it does. (EXCEL)", "a": ["excellence"]}, {"q": "He felt deeply ______ about the way he'd been treated. (RESENT)", "a": ["resentful"]}, {"q": "Children are naturally ______ – they ask questions all the time. (INQUIRE)", "a": ["inquisitive"]}, {"q": "A ______ environment helps children grow in confidence. (NURTURE)", "a": ["nurturing"]}, {"q": "He became ______ in Spanish after two years in Madrid. (PROFICIENCY)", "a": ["proficient"]}]}, {"type": "quiz", "title": "Odd One Out: Collocations", "how": "Which word does NOT go with the phrase? Choose it. If it is wrong, try again.", "items": [{"q": "strike / touch / make + a chord", "opts": [{"t": "make", "ok": true}, {"t": "strike", "ok": false}, {"t": "touch", "ok": false}]}, {"q": "a complete / total / utter / full + fallacy", "opts": [{"t": "full", "ok": true}, {"t": "complete", "ok": false}, {"t": "total", "ok": false}, {"t": "utter", "ok": false}]}, {"q": "patently / obviously / clearly / heavily + not true", "opts": [{"t": "heavily", "ok": true}, {"t": "patently", "ok": false}, {"t": "obviously", "ok": false}, {"t": "clearly", "ok": false}]}, {"q": "make great / huge / tall + strides", "opts": [{"t": "tall", "ok": true}, {"t": "great", "ok": false}, {"t": "huge", "ok": false}]}, {"q": "throw / chuck / put + in the towel", "opts": [{"t": "put", "ok": true}, {"t": "throw", "ok": false}, {"t": "chuck", "ok": false}]}, {"q": "maintain / uphold / set / make + rigorous standards", "opts": [{"t": "make", "ok": true}, {"t": "maintain", "ok": false}, {"t": "uphold", "ok": false}, {"t": "set", "ok": false}]}, {"q": "take / show / use / make + the initiative", "opts": [{"t": "make", "ok": true}, {"t": "take", "ok": false}, {"t": "show", "ok": false}, {"t": "use", "ok": false}]}, {"q": "foster / build / develop / do + good relationships", "opts": [{"t": "do", "ok": true}, {"t": "foster", "ok": false}, {"t": "build", "ok": false}, {"t": "develop", "ok": false}]}, {"q": "fulfil / reach / realise / finish + your potential", "opts": [{"t": "finish", "ok": true}, {"t": "fulfil", "ok": false}, {"t": "reach", "ok": false}, {"t": "realise", "ok": false}]}, {"q": "continuous / peer / external / rote + assessment", "opts": [{"t": "rote", "ok": true}, {"t": "continuous", "ok": false}, {"t": "peer", "ok": false}, {"t": "external", "ok": false}]}]}, {"type": "unjumble", "title": "Translate: Build the English Sentence", "how": "Read the Ukrainian sentence. Tap the English words in the right order to translate it. Tap a word in your answer to remove it.", "items": [{"hint": "Те, що він сказав, мене дуже зачепило.", "s": "What he said really struck a chord with me."}, {"hint": "Якби не підтримка мами, я б кинула університет.", "s": "But for my mum's support, I would have dropped out of university."}, {"hint": "Це явно неправда, що старші люди не можуть вивчити нову мову.", "s": "It's patently not true that older people can't learn a new language."}, {"hint": "Якби я тоді не переїхала до Києва, я б зараз тут не працювала.", "s": "If I hadn't moved to Kyiv back then, I wouldn't be working here now.", "alt": ["If I hadn't moved to Kyiv back then, I wouldn't now be working here."]}, {"hint": "Хто б не прийшов першим, нехай відчинить двері.", "s": "Whoever comes first should open the door."}, {"hint": "Я не створена для роботи в офісі.", "s": "I'm not cut out for office work."}, {"hint": "Якщо раптом вам знадобиться допомога, звертайтеся. (інверсія)", "s": "Should you need any help, don't hesitate to contact us."}, {"hint": "У цьому твердженні є частка правди, але воно надто спрощене.", "s": "There's an element of truth in this statement, but it's way too oversimplistic."}, {"hint": "Як не подивись, освіта має змінитися.", "s": "However you look at it, education has to change."}, {"hint": "Я погоджуся за умови, що ти допоможеш мені з презентацією.", "s": "I'll agree on condition that you help me with the presentation."}, {"hint": "Не зациклюйся на дрібних помилках.", "s": "Don't get hung up about minor mistakes."}, {"hint": "Те, що мені справді потрібно, – це більше практики.", "s": "What I really need is more practice."}]}, {"type": "cloze", "title": "Dan's Big Decision: Fill the Gaps", "how": "Complete the dialogue. Choose an expression for each gap. Each choice is checked straight away. Some words in the list are extra.", "text": "A: Did you hear Dan's going to quit university to become a chef?\nB: Really? I always thought he wasn't **cut out** for engineering, to be honest.\nA: His parents aren't exactly **on board with** the idea. They keep saying ‘a degree is everything’.\nB: That's a **sweeping** statement! Plenty of successful people never finished university.\nA: True, but there's **an element of truth** in it – some jobs really do need a degree.\nB: Sure. But **if it weren't for** his love of cooking, he'd have dropped out ages ago anyway.\nA: **Whatever** he does, I hope he's happy. He's already made huge **strides** – he got a job at that new restaurant.\nB: Good for him! **Were** I his age, I'd probably do the same.", "distract": ["patently", "Should", "steps", "a complete fallacy"]}, {"part": "Part 9 · Extra vocabulary", "type": "cloze", "title": "Extra Vocabulary: Fill the Gaps", "how": "Choose a word for each gap. Each choice is checked straight away. Some words in the list are extra.", "text": "1. Gardening has been my favourite **pastime** since I retired.\n2. Everyone in the office should know basic **first aid** in case of an accident.\n3. A good nurse needs to be **empathetic** and patient.\n4. My grandmother taught me how to **sew** buttons onto my shirts.\n5. ‘It's fine,’ she **murmured** quietly, but I could see she was upset.\n6. Despite **numerous** studies on the topic, scientists still disagree.\n7. Talent is important, but **persistence** is what really gets results.\n8. Without the drama teacher's **intervention**, her son would never have tried acting.\n9. Keeping a diary is a great tool for **self-reflection**.\n10. Nurses often feel **undervalued** – they work hard but get little recognition.\n11. After years of hard work, she was a **worthy** winner of the award.\n12. The **tarsals** and metatarsals are bones in your foot.", "distract": ["murmur", "persistent", "intervene", "worth"]}, {"type": "type", "title": "Extra Phrases: Type the Phrase", "how": "Complete each sentence with a phrase from the box. Change the form if necessary. Press Enter or Check.", "bank": ["a shift to", "at a rapid pace", "by no means", "differ", "heads down", "in light of", "it bugs me", "kick off", "lay out", "prevent sb from", "pursue a career", "set out", "settle on", "the best way forward", "valid for"], "items": [{"q": "Let's ______ the meeting with a quick round of introductions.", "a": ["kick off"]}, {"q": "After months of searching, we finally ______ a flat near the city centre.", "a": ["settled on"]}, {"q": "In her introduction, the presenter ______ exactly what we needed to consider.", "a": ["laid out", "set out"]}, {"q": "The government has ______ which subjects all students must study.", "a": ["set out", "laid out"]}, {"q": "Fear of failing can ______ taking risks.", "a": ["prevent you from"]}, {"q": "He left school at sixteen to ______ in music.", "a": ["pursue a career"]}, {"q": "______ the latest research, we've decided to change our approach.", "a": ["In light of"]}, {"q": "Honestly, talking to each other openly is ______.", "a": ["the best way forward"]}, {"q": "These reforms are ______ part of every country's education system.", "a": ["by no means"]}, {"q": "In recent years there has been ______ online learning.", "a": ["a shift to"]}, {"q": "Opinions on the value of failure ______ widely.", "a": ["differ"]}, {"q": "______ when people talk loudly on the phone on trains.", "a": ["It bugs me"]}, {"q": "This advice isn't ______ every situation – use your common sense.", "a": ["valid for"]}, {"q": "The students sat in rows, ______, writing silently in their notebooks.", "a": ["heads down"]}, {"q": "Our world is changing ______, so education has to adapt.", "a": ["at a rapid pace"]}]}, {"type": "type", "title": "Extra Vocabulary: Word Formation", "how": "Complete the sentences with the correct form of the word in CAPITALS. Press Enter or Check.", "items": [{"q": "Her ______ finally paid off – she got the job on her tenth attempt. (PERSIST)", "a": ["persistence"]}, {"q": "The teacher's timely ______ stopped the argument. (INTERVENE)", "a": ["intervention"]}, {"q": "He's very ______ – he always understands how other people feel. (EMPATHY)", "a": ["empathetic"]}, {"q": "Many carers feel ______ and underpaid. (VALUE)", "a": ["undervalued"]}, {"q": "Is this cause ______ of our support? (WORTH)", "a": ["worthy"]}, {"q": "Their views ______ significantly from ours. (DIFFERENT)", "a": ["differ"]}, {"q": "In modern classrooms, the teacher acts as a ______ rather than a lecturer. (FACILITATE)", "a": ["facilitator"]}, {"q": "Jay thinks some sayings are ______ simplistic. (OVER)", "a": ["overly"]}]}, {"type": "type", "title": "Grammar Focus: WERE TO", "how": "Rewrite the beginning of each sentence with If … were to or the inversion Were … to. Type only the missing part. Press Enter or Check.", "items": [{"q": "If we analysed these sayings, we'd probably find some are wrong. → ______ these sayings, we'd probably find some are wrong. (Were we …)", "a": ["Were we to analyse", "Were we to analyze"]}, {"q": "If you lost your job, what would you do? → ______ your job, what would you do? (If you were …)", "a": ["If you were to lose"]}, {"q": "If the school cut tuition fees, more students would apply. → ______ tuition fees, more students would apply. (Were the school …)", "a": ["Were the school to cut"]}, {"q": "If I told you the truth, you wouldn't believe me. → ______ the truth, you wouldn't believe me. (Were I …)", "a": ["Were I to tell you"]}, {"q": "If they offered me the position, I'd accept it. → ______ the position, I'd accept it. (If they were …)", "a": ["If they were to offer me"]}, {"q": "If technology replaced teachers, education would change completely. → ______ teachers, education would change completely. (Were technology …)", "a": ["Were technology to replace"]}]}, {"type": "unjumble", "title": "Translate: Extra Vocabulary", "how": "Read the Ukrainian sentence. Tap the English words in the right order to translate it. Tap a word in your answer to remove it.", "items": [{"hint": "Мене дратує, коли люди запізнюються без попередження.", "s": "It bugs me when people are late without warning."}, {"hint": "З огляду на нові дані, нам варто переглянути план.", "s": "In light of the new data, we should reassess the plan."}, {"hint": "Вона вирішила будувати кар'єру в медицині.", "s": "She decided to pursue a career in medicine."}, {"hint": "Ця порада аж ніяк не підходить для всіх ситуацій.", "s": "This advice is by no means valid for all situations."}, {"hint": "Після довгих роздумів ми зупинилися на другому варіанті.", "s": "After a lot of thought, we settled on the second option."}, {"hint": "На мою думку, найкращий шлях уперед – це відверта розмова.", "s": "In my opinion, the best way forward is an honest conversation."}, {"hint": "Вчителі часто почуваються недооціненими.", "s": "Teachers often feel undervalued."}, {"hint": "Наполегливість важливіша за талант.", "s": "Persistence is more important than talent."}, {"hint": "Технології змінюються дуже швидкими темпами.", "s": "Technology is changing at a rapid pace."}, {"hint": "Самоаналіз зараз у тренді.", "s": "Self-reflection is on trend at the moment."}, {"hint": "Страх може завадити тобі спробувати щось нове.", "s": "Fear can prevent you from trying something new."}, {"hint": "Ми розпочали урок з короткої гри.", "s": "We kicked off the lesson with a short game."}, {"hint": "Його друзі поплескали його по плечу й заспокійливо сказали, що все буде добре.", "s": "His friends patted him on the back and reassuringly said that everything would be fine.", "alt": ["His friends patted him on the back and said reassuringly that everything would be fine."]}, {"hint": "Не можна просто запам'ятовувати факти – учителі давно вже не є джерелом усіх знань.", "s": "You can't just memorise facts – teachers stopped being the fount of all knowledge long ago."}]}]};
+const KEY = 'oe-speakout-c1-unit1ab-revision-v1';
+const HOW = {
+  match: 'Tap a phrase on the left, then its pair on the right. Each pair is checked straight away.',
+  quiz: 'Choose the correct answer. If it is wrong, try again.',
+  tf: 'Read the sentence. Is it true or false?',
+  whack: 'Tap all the correct answers in each task. Wrong taps count as mistakes.',
+  type: 'Type the answer and press Enter or Check. If it is wrong, change it and check again.',
+  anagram: 'Tap the letters in the right order to build the word. Tap a letter in your answer to remove it.',
+  cloze: 'Choose a word for each gap. Each choice is checked straight away. Some words in the list are extra.',
+  unjumble: 'Tap the words in the right order to build the sentence. Tap a word in your answer to remove it.',
+  open: 'Type your answer in each gap and press Enter (or Tab). Each gap is checked straight away.'
+};
+const KIND = { match: 'Match the pairs', quiz: 'Choose the answer', tf: 'True or false', whack: 'Choose all correct', type: 'Type the answer', anagram: 'Build the word', cloze: 'Fill the gaps', unjumble: 'Build the sentence', open: 'Open cloze' };
+const MSG = { ok: 'Correct!', bad: 'Incorrect. Try again.', part: 'Good! Find the rest.' };
+let scores = {};
+try { scores = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { scores = {}; }
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(scores)); } catch (e) {} };
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+// Answer check is tolerant of contractions (don't = do not), commas, hyphens and capital letters
+const norm = s => s.toLowerCase().replace(/[’‘`´]/g, "'").replace(/[—–]/g, '-')
+  .replace(/\b(had|would|could|should|do|does|did|is|was|were|are|have|has|must|need)nt\b/g, "$1n't").replace(/\bcant\b/g, "can't").replace(/\bwont\b/g, "won't")
+  .replace(/\bcan't\b/g, 'can not').replace(/\bcannot\b/g, 'can not').replace(/\bwon't\b/g, 'will not').replace(/\bshan't\b/g, 'shall not').replace(/n't\b/g, ' not')
+  .replace(/'re\b/g, ' are').replace(/'ve\b/g, ' have').replace(/'ll\b/g, ' will').replace(/\bi'm\b/g, 'i am').replace(/\b(it|there|that|he|she|what|who)'s\b/g, '$1 is')
+  .replace(/'/g, '').replace(/[-,;:!?"“”()…]/g, ' ').replace(/\s+/g, ' ').replace(/[.]+$/, '').trim();
+const el = (tag, cls, txt) => { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; };
+// Text with **bold** parts (used to mark the mistake or key word in a sentence)
+const rich = (txt) => { const f = document.createDocumentFragment(); String(txt).split(/\*\*(.+?)\*\*/).forEach((t, k) => f.append(k % 2 ? el('b', '', t) : document.createTextNode(t))); return f; };
+const total = e => (e.type === 'cloze' || e.type === 'open') ? (e.text.match(/\*\*/g) || []).length / 2 : e.items.length;
+let current = -1;
+
+function renderNav() {
+  const nav = document.getElementById('nav'), pk = document.getElementById('picker');
+  nav.innerHTML = ''; pk.innerHTML = '';
+  const add = (idx, label, n) => {
+    const b = el('button'); if (idx === current) b.classList.add('on');
+    b.style.setProperty('--c', 'var(--k-' + (idx < 0 ? 'words' : DATA.exercises[idx].type) + ')'); b.style.setProperty('--p', 'var(--p-' + (idx < 0 ? 'words' : DATA.exercises[idx].type) + ')');
+    b.append(el('span', 'n', n || (idx === -2 ? '♪' : idx === -3 ? '⌂' : idx === -4 ? '📖' : '★')), el('span', '', label));
+    const sc = el('span', 'sc');
+    if (idx >= 0 && scores[idx] != null) { const t = total(DATA.exercises[idx]); sc.textContent = scores[idx] + '/' + t; if (scores[idx] === t) sc.classList.add('full'); }
+    b.append(sc); b.onclick = () => open(idx); nav.append(b);
+    const o = el('option', '', (n ? n + '. ' : '') + label + (idx >= 0 && scores[idx] != null ? '  (' + scores[idx] + '/' + total(DATA.exercises[idx]) + ')' : '')); o.value = idx; if (idx === current) o.selected = true; pk.append(o);
+  };
+  add(-3, 'Home', '');
+  add(-1, 'Word list', '');
+  add(-2, 'Flashcards with audio', '');
+  add(-4, 'Rules: grammar', '');
+  nav.append(el('div', 'sep', 'Exercises'));
+  let revSep = false;
+  DATA.exercises.forEach((e, i) => { if (e.part) nav.append(el('div', 'sep', e.part)); if (e.review && !revSep) { revSep = true; nav.append(el('div', 'sep', 'Review: previous list')); } add(i, e.title, i + 1); });
+  const st = document.getElementById('stripe'); st.innerHTML = '';
+  DATA.exercises.forEach((e, i) => { const c = el('button'); c.style.setProperty('--c', 'var(--k-' + e.type + ')'); c.style.setProperty('--p', 'var(--p-' + e.type + ')'); c.title = (i + 1) + '. ' + e.title; c.setAttribute('aria-label', c.title);
+    if (scores[i] != null) c.classList.add('done'); if (i === current) c.classList.add('on'); c.onclick = () => open(i); st.append(c); });
+  const done = Object.keys(scores).length;
+  let got = 0, all = 0; Object.keys(scores).forEach(k => { got += scores[k]; all += total(DATA.exercises[k]); });
+  document.getElementById('total').innerHTML = '<b>' + done + '</b> of ' + DATA.exercises.length + ' exercises done' + (all ? ' · ' + Math.round(got / all * 100) + '% correct on first try' : '');
+}
+document.getElementById('picker').onchange = e => open(+e.target.value);
+
+// One controller per exercise: instant right/wrong per item, answers only at the end on request
+function makeCtl(ex, idx, s, foot) {
+  const n = total(ex);
+  const ctl = { first: Array(n).fill(null), solved: Array(n).fill(false), answers: Array(n).fill(''), labels: Array(n).fill(''), fb: Array(n).fill(null), marks: Array(n).fill(null), ended: false, lockers: [] };
+  const res = el('div', 'result'), endBox = el('div', 'row'), btns = el('div', 'row');
+  const finishB = el('button', 'btn', 'Finish exercise');
+  const again = el('button', 'btn ghost', 'Start again'); again.onclick = () => open(idx);
+  btns.append(finishB, again);
+  if (idx < DATA.exercises.length - 1) { const nx = el('button', 'btn primary', 'Next exercise →'); nx.onclick = () => { open(idx + 1); window.scrollTo({ top: 0 }); }; btns.append(nx); }
+  const left = el('div', 'endcol'); left.append(res, endBox);
+  foot.append(left, btns);
+  const say = (i, kind) => { const f = ctl.fb[i]; if (!f) return; f.className = 'fb ' + (kind === 'ok' ? 'okt' : kind === 'bad' ? 'badt' : 'partt'); f.textContent = MSG[kind]; };
+  ctl.wrong = i => { if (ctl.ended || ctl.solved[i]) return; if (ctl.first[i] === null) ctl.first[i] = false; say(i, 'bad'); };
+  ctl.part = i => { if (!ctl.ended) say(i, 'part'); };
+  ctl.right = i => { if (ctl.ended || ctl.solved[i]) return; if (ctl.first[i] === null) ctl.first[i] = true; ctl.solved[i] = true; say(i, 'ok'); if (ctl.solved.every(Boolean)) end(); };
+  function end() {
+    if (ctl.ended) return; ctl.ended = true; finishB.remove();
+    ctl.lockers.forEach(f => f());
+    const got = ctl.first.filter(x => x === true).length;
+    scores[idx] = got; save(); renderNav();
+    res.textContent = (got === n ? 'Perfect! ' : got >= n * 0.8 ? 'Great job! ' : got >= n * 0.5 ? 'Good effort! ' : 'Keep practising! ') + got + ' of ' + n + ' correct on first try';
+    const a = el('button', 'btn', 'Show results'), b = el('button', 'btn', 'Show results with answers');
+    a.onclick = () => reveal(false); b.onclick = () => reveal(true);
+    endBox.append(a, b);
+    left.append(sendBox(true));
+    if (got === n) confetti(s);
+  }
+  function reveal(withAnswers) {
+    endBox.innerHTML = '';
+    const list = el('div', 'review');
+    for (let i = 0; i < n; i++) {
+      const ok = ctl.first[i] === true;
+      const tag = ok ? '✓ Correct' : ctl.first[i] === false ? '✗ Mistake' : '✗ Not answered';
+      const line = el('div', 'rv ' + (ok ? 'rv-ok' : 'rv-bad'));
+      line.append(el('b', '', (i + 1) + '. ' + tag));
+      if (ctl.labels[i]) line.append(document.createTextNode(' · ' + ctl.labels[i]));
+      if (withAnswers && !ok) line.append(el('span', 'ans', 'Answer: ' + ctl.answers[i]));
+      list.append(line);
+      if (ctl.marks[i]) { const m = ctl.marks[i]; m.classList.remove('rv-ok', 'rv-bad'); m.classList.add(ok ? 'rv-ok' : 'rv-bad'); }
+    }
+    const h = el('div', 'hint', withAnswers ? 'Your results with the correct answers:' : 'Your results (✓ correct on first try, ✗ mistake):');
+    endBox.append(h);
+    endBox.parentNode.append(list);
+    const other = el('button', 'btn', withAnswers ? 'Hide answers' : 'Show answers too');
+    other.onclick = () => { list.remove(); h.remove(); other.remove(); reveal(!withAnswers); };
+    endBox.append(other);
+  }
+  finishB.onclick = end;
+  return ctl;
+}
+
+function open(idx) {
+  current = idx; renderNav();
+  const s = document.getElementById('sheet'); s.innerHTML = '';
+  s.style.setProperty('--c', 'var(--k-words)'); s.style.setProperty('--p', 'var(--p-words)');
+  if (idx === -3) return home(s);
+  if (idx === -2) return cards(s);
+  if (idx === -4) return rules(s);
+  if (idx < 0) return words(s);
+  const ex = DATA.exercises[idx];
+  s.style.setProperty('--c', 'var(--k-' + ex.type + ')'); s.style.setProperty('--p', 'var(--p-' + ex.type + ')');
+  s.append(el('span', 'kind', (ex.review ? 'Review · ' : 'Exercise ' + (idx + 1) + ' · ') + KIND[ex.type]), el('h2', '', ex.title), el('p', 'howto', ex.how || HOW[ex.type]));
+  if (ex.bank) { const bk = el('div', 'bank'); ex.bank.forEach(w => bk.append(el('span', '', w))); s.append(bk); }
+  if (ex.passage) { const ps = el('div', 'passage'); ps.append(rich(ex.passage)); s.append(ps); }
+  const box = el('div', 'items'); s.append(box);
+  const foot = el('div', 'foot'); s.append(foot);
+  const ctl = makeCtl(ex, idx, s, foot);
+  ({ match, quiz, tf, whack, type: typed, anagram, cloze, unjumble, open: openCloze })[ex.type](ex, box, ctl);
+}
+
+function itemShell(box, ctl, i, qText) {
+  const d = el('div', 'item'), q = el('div', 'q'); q.append(el('span', 'num', (i + 1) + '.'), rich(qText));
+  const fb = el('div', 'fb'); ctl.fb[i] = fb; ctl.marks[i] = d;
+  d.append(q); box.append(d);
+  return { d, fb };
+}
+
+function quiz(ex, box, ctl, tfMode) {
+  ex.items.forEach((it, i) => {
+    const { d, fb } = itemShell(box, ctl, i, it.q);
+    const o = el('div', 'opts');
+    const opts = tfMode ? it.opts : shuffle(it.opts);
+    ctl.answers[i] = opts.find(x => x.ok).t;
+    const bs = opts.map(op => {
+      const b = el('button', 'opt', op.t);
+      b.onclick = () => {
+        if (op.ok) { b.classList.add('ok'); bs.forEach(x => x.disabled = true); ctl.right(i); }
+        else { b.classList.add('bad'); b.disabled = true; ctl.wrong(i); }
+      };
+      return b;
+    });
+    ctl.lockers.push(() => bs.forEach(x => x.disabled = true));
+    o.append(...bs); d.append(o, fb);
+  });
+}
+function tf(ex, box, ctl) {
+  quiz({ items: ex.items.map(it => ({ q: it.q, opts: [{ t: 'True', ok: it.a[0] === 'True' }, { t: 'False', ok: it.a[0] === 'False' }] })) }, box, ctl, true);
+}
+
+function whack(ex, box, ctl) {
+  ex.items.forEach((it, i) => {
+    const { d, fb } = itemShell(box, ctl, i, it.q);
+    const o = el('div', 'opts');
+    const opts = shuffle(it.opts); const need = opts.filter(x => x.ok).length; let found = 0;
+    ctl.answers[i] = opts.filter(x => x.ok).map(x => x.t).join(', ');
+    const bs = opts.map(op => {
+      const b = el('button', 'chip', op.t);
+      b.onclick = () => {
+        b.disabled = true;
+        if (op.ok) { b.classList.add('ok'); if (++found === need) { bs.forEach(x => x.disabled = true); ctl.right(i); } else ctl.part(i); }
+        else { b.classList.add('bad'); ctl.wrong(i); }
+      };
+      return b;
+    });
+    ctl.lockers.push(() => bs.forEach(x => x.disabled = true));
+    o.append(...bs); d.append(o, fb);
+  });
+}
+
+function typed(ex, box, ctl) {
+  ex.items.forEach((it, i) => {
+    const { d, fb } = itemShell(box, ctl, i, it.q);
+    ctl.answers[i] = it.a[0];
+    const r = el('div', 'row'), inp = el('input'); inp.type = 'text'; inp.id = 'ex' + current + '-' + i; inp.autocomplete = 'off'; inp.spellcheck = false; inp.setAttribute('autocapitalize', 'off');
+    const b = el('button', 'btn', 'Check');
+    const check = () => {
+      if (!inp.value.trim() || inp.disabled) return;
+      if (it.a.some(a => norm(a) === norm(inp.value))) {
+        inp.classList.remove('bad'); inp.classList.add('ok'); inp.disabled = true; b.remove(); ctl.right(i);
+        const nx = [...box.querySelectorAll('input')].find(x => !x.disabled); if (nx) nx.focus();
+      } else { inp.classList.add('bad'); ctl.wrong(i); }
+    };
+    inp.oninput = () => inp.classList.remove('bad');
+    b.onclick = check; inp.onkeydown = e => { if (e.key === 'Enter') check(); };
+    ctl.lockers.push(() => { inp.disabled = true; b.disabled = true; });
+    r.append(inp, b); d.append(r, fb);
+  });
+}
+
+// Shared builder for anagram letters and unjumble words
+function builder(box, ctl, i, qText, toks, target, joiner, tileCls) {
+  const { d, fb } = itemShell(box, ctl, i, qText);
+  let order = shuffle(toks.map((t, k) => k)); if (toks.length > 1 && order.every((v, k) => v === k)) order = order.reverse();
+  const line = el('div', 'answer-line'), pool = el('div', tileCls === 'tile' ? 'tiles' : 'opts');
+  const built = []; let done = false;
+  const pbs = {};
+  order.forEach(k => { const b = el('button', tileCls, toks[k]); b.onclick = () => { if (done) return; b.disabled = true; b.style.visibility = 'hidden'; built.push(k); draw(); if (built.length === toks.length) check(); }; pbs[k] = b; pool.append(b); });
+  function draw() {
+    line.innerHTML = '';
+    built.forEach((k, pos) => { const b = el('button', tileCls, toks[k]); b.onclick = () => { if (done) return; built.splice(pos, 1); pbs[k].disabled = false; pbs[k].style.visibility = ''; draw(); }; line.append(b); });
+  }
+  function check() {
+    const got = built.map(k => toks[k]).join(joiner);
+    const ok = Array.isArray(target) ? target.includes(got) : got === target;
+    if (ok) { done = true; line.querySelectorAll('button').forEach(b => { b.disabled = true; b.classList.add('ok'); }); pool.remove(); ctl.right(i); }
+    else { line.querySelectorAll('button').forEach(b => b.classList.add('bad')); ctl.wrong(i); }
+  }
+  ctl.lockers.push(() => { done = true; line.querySelectorAll('button').forEach(b => b.disabled = true); Object.values(pbs).forEach(b => b.disabled = true); });
+  d.append(line, pool, fb);
+}
+function anagram(ex, box, ctl) {
+  ex.items.forEach((it, i) => { ctl.answers[i] = it.w; builder(box, ctl, i, it.hint, it.w.split(''), it.w, '', 'tile'); });
+}
+function unjumble(ex, box, ctl) {
+  ex.items.forEach((it, i) => { ctl.answers[i] = it.s; builder(box, ctl, i, it.hint || 'Build the sentence', it.s.split(' '), [it.s].concat(it.alt || []), ' ', 'chip'); });
+}
+
+// Open cloze: a text with typed gaps, **answer|other accepted answer**
+function openCloze(ex, box, ctl) {
+  const parts = ex.text.split(/\*\*(.+?)\*\*/);
+  const p = el('div', 'cloze'), ins = [], fb = el('div', 'fb');
+  let gi = 0;
+  parts.forEach((t, k) => {
+    if (k % 2 === 0) { p.append(document.createTextNode(t)); return; }
+    const i = gi++, acc = t.split('|');
+    ctl.answers[i] = acc[0]; ctl.labels[i] = 'gap ' + (i + 1); ctl.fb[i] = fb;
+    const inp = el('input', 'gapin'); inp.type = 'text'; inp.autocomplete = 'off'; inp.spellcheck = false; inp.setAttribute('autocapitalize', 'off');
+    inp.setAttribute('aria-label', 'Gap ' + (i + 1)); inp.size = Math.max(5, Math.max(...acc.map(a => a.length)));
+    let last = '';
+    const check = () => {
+      const v = inp.value.trim(); if (!v || inp.disabled || v === last) return; last = v;
+      if (acc.some(a => norm(a) === norm(v))) { inp.classList.remove('bad'); inp.classList.add('ok'); inp.disabled = true; ctl.right(i); }
+      else { inp.classList.add('bad'); ctl.wrong(i); }
+    };
+    inp.oninput = () => inp.classList.remove('bad');
+    inp.onkeydown = e => { if (e.key === 'Enter') { check(); const nx = ins.find(x => !x.disabled && x !== inp); if (inp.disabled && nx) nx.focus(); } };
+    inp.onchange = check;
+    ins.push(inp); p.append(el('sup', 'gapn', String(i + 1)), inp);
+  });
+  ctl.lockers.push(() => ins.forEach(x => x.disabled = true));
+  box.append(p, fb);
+}
+
+function match(ex, box, ctl) {
+  const n = ex.items.length;
+  const right = shuffle(ex.items.map((p, i) => ({ t: p[1], i })));
+  ex.items.forEach((p, i) => { ctl.answers[i] = p[1]; ctl.labels[i] = p[0]; });
+  let selL = null;
+  const g = el('div', 'match'), cl = el('div', 'col lcol'), cr = el('div', 'col rcol');
+  cl.append(el('div', 'colh', '① Tap a phrase')); cr.append(el('div', 'colh', '② Tap its pair'));
+  const fb = el('div', 'fb');
+  for (let i = 0; i < n; i++) ctl.fb[i] = fb;
+  const mk = txt => { const b = el('button', 'chip'); b.append(el('span', 'tag', ''), document.createTextNode(txt)); return b; };
+  let pairNo = 0;
+  const lbs = ex.items.map((p, k) => { const b = mk(p[0]); b.onclick = () => { selL = k; lbs.forEach(y => y.classList.remove('sel')); b.classList.add('sel'); }; return b; });
+  const rbs = right.map(x => {
+    const b = mk(x.t);
+    b.onclick = () => {
+      if (selL == null) { fb.className = 'fb'; fb.textContent = 'First tap a phrase on the left.'; return; }
+      const L = selL; lbs[L].classList.remove('sel'); selL = null;
+      if (x.i === L) {
+        pairNo++; [lbs[L], b].forEach(y => { y.classList.add('ok', 'paired'); y.disabled = true; y.querySelector('.tag').textContent = pairNo; });
+        ctl.right(L);
+      } else {
+        [lbs[L], b].forEach(y => y.classList.add('bad'));
+        setTimeout(() => [lbs[L], b].forEach(y => y.classList.remove('bad')), 700);
+        ctl.wrong(L);
+      }
+    };
+    return b;
+  });
+  ctl.lockers.push(() => { lbs.forEach(b => b.disabled = true); rbs.forEach(b => b.disabled = true); });
+  cl.append(...lbs); cr.append(...rbs); g.append(cl, cr);
+  box.append(g, fb);
+}
+
+function cloze(ex, box, ctl) {
+  const parts = ex.text.split(/\*\*(.+?)\*\*/);
+  const answers = parts.filter((_, k) => k % 2 === 1);
+  const bankWords = shuffle([...new Set(answers.concat(ex.distract || []))]);
+  const bank = el('div', 'bank'); bankWords.forEach(w => bank.append(el('span', '', w)));
+  const p = el('div', 'cloze'); const sels = []; const fb = el('div', 'fb');
+  let gi = 0;
+  parts.forEach((t, k) => {
+    if (k % 2 === 0) { p.append(document.createTextNode(t)); return; }
+    const i = gi++; ctl.answers[i] = answers[i]; ctl.labels[i] = 'gap ' + (i + 1); ctl.fb[i] = fb;
+    const num = el('sup', 'gapn', String(i + 1));
+    const s = el('select'); s.id = 'ex' + current + '-g' + i; s.setAttribute('aria-label', 'Gap ' + (i + 1));
+    s.append(el('option', '', '…')); bankWords.forEach(w => { const o = el('option', '', w); o.value = w; s.append(o); });
+    s.onchange = () => {
+      if (s.selectedIndex === 0) return;
+      if (s.value === answers[i]) { s.classList.remove('bad'); s.classList.add('ok'); s.disabled = true; ctl.right(i); }
+      else { s.classList.add('bad'); ctl.wrong(i); }
+    };
+    sels.push(s); p.append(num, s);
+  });
+  ctl.lockers.push(() => sels.forEach(s => s.disabled = true));
+  box.append(bank, p, fb);
+}
+
+function confetti(s) {
+  const c = el('div', 'confetti'); const cols = ['match', 'quiz', 'tf', 'whack', 'type', 'anagram', 'cloze', 'unjumble'];
+  for (let i = 0; i < 40; i++) { const p = el('i'); p.style.left = Math.random() * 100 + '%'; p.style.background = 'var(--k-' + cols[i % cols.length] + ')'; p.style.animationDelay = Math.random() * .4 + 's'; c.append(p); }
+  s.append(c); setTimeout(() => c.remove(), 2200);
+}
+
+// Sending results to the teacher: a pre-filled Google Form opened by a real link (no account needed)
+const FORM = 'https://docs.google.com/forms/d/e/1FAIpQLSeU5OtxRWv9FFKZlzXcFNqe4wvK2-VtyyHlOenqg6yGoDb5jg/viewform?usp=pp_url';
+const F_NAME = 'entry.1946038210', F_TR = 'entry.121501776', F_RES = 'entry.269274832';
+const NKEY = 'fce-student-name';
+const getName = () => { try { return localStorage.getItem(NKEY) || ''; } catch (e) { return ''; } };
+const setName = v => { try { localStorage.setItem(NKEY, v); } catch (e) {} };
+const trainerName = () => (document.querySelector('h1') || {}).textContent || 'SpeakOut C1 (Unit 1A/B) Revision';
+function resultsText() {
+  const ex = DATA.exercises; let done = 0, got = 0, all = 0;
+  ex.forEach((e, i) => { if (scores[i] != null) { done++; got += scores[i]; all += total(e); } });
+  const lines = ['Exercises done: ' + done + ' of ' + ex.length + (all ? ' · ' + Math.round(got / all * 100) + '% correct on first try' : '')];
+  try { lines.push('Flashcards: knows ' + known.size + ' of ' + DATA.words.length + ' words'); } catch (e) {}
+  lines.push('');
+  ex.forEach((e, i) => lines.push((i + 1) + '. ' + e.title + ' — ' + (scores[i] != null ? scores[i] + '/' + total(e) : 'not done')));
+  lines.push('', 'Sent: ' + new Date().toLocaleString('en-GB'));
+  return lines.join('\n');
+}
+const formUrl = name => FORM + '&' + F_NAME + '=' + encodeURIComponent(name) + '&' + F_TR + '=' + encodeURIComponent(trainerName()) + '&' + F_RES + '=' + encodeURIComponent(resultsText());
+function sendBox(compact) {
+  const box = el('div', 'sendbox' + (compact ? ' compact' : ''));
+  if (!compact) box.append(el('h3', 'homeh', 'Send your results'), el('p', 'hint', 'Finished for today? Type your name once and send your results to your teacher. A form opens with everything filled in — just press Submit (Надіслати).'));
+  const id = 'studentName' + (compact ? '-end' : '');
+  const lab = el('label', 'slab', 'Your name'); lab.htmlFor = id;
+  const inp = el('input'); inp.type = 'text'; inp.id = id; inp.value = getName(); inp.placeholder = 'e.g. Anna K.'; inp.autocomplete = 'name';
+  const row = el('div', 'row'), send = el('a', 'btn primary sendbtn', 'Send results to my teacher'), copy = el('button', 'btn', 'Copy my results'), msg = el('div', 'fb');
+  send.target = '_blank'; send.rel = 'noopener';
+  const refresh = () => { const n = inp.value.trim(); send.href = n ? formUrl(n) : '#'; };
+  inp.oninput = () => { setName(inp.value.trim()); refresh(); msg.textContent = ''; };
+  send.onclick = e => { const n = inp.value.trim(); if (!n) { e.preventDefault(); msg.className = 'fb badt'; msg.textContent = 'Please type your name first.'; inp.focus(); return; } send.href = formUrl(n); msg.className = 'fb okt'; msg.textContent = 'The form is opening in a new tab. Press Submit (Надіслати) there.'; };
+  send.onmouseenter = refresh; send.onfocus = refresh;
+  copy.onclick = () => {
+    const txt = (inp.value.trim() ? inp.value.trim() + ' · ' : '') + trainerName() + '\n' + resultsText();
+    const done = () => { msg.className = 'fb okt'; msg.textContent = 'Copied! Paste it into a message to your teacher.'; };
+    const fallback = () => { const ta = el('textarea'); ta.value = txt; ta.className = 'copyta'; box.append(ta); ta.select(); msg.className = 'fb'; msg.textContent = 'Select the text above and copy it.'; };
+    try { navigator.clipboard.writeText(txt).then(done, fallback); } catch (e) { fallback(); }
+  };
+  refresh();
+  row.append(send, copy); box.append(lab, inp, row, msg);
+  return box;
+}
+
+function home(s) {
+  s.style.setProperty('--c', 'var(--k-words)'); s.style.setProperty('--p', 'var(--p-words)');
+  const wc = el('div', 'welcome'), wi = el('img'); wi.src = document.getElementById('tphoto').src; wi.alt = 'Your English teacher';
+  const wt = el('div'); wt.append(el('b', '', 'Time to review!'), el('p', '', 'I prepared these exercises on Units 1A and 1B especially for you. Let\'s check what you remember. Mistakes are fine — they show what to practise next.'));
+  wc.append(wi, wt); s.append(wc);
+  const sec = (title) => { const h = el('h3', 'homeh', title); s.append(h); const g = el('div', 'tilegrid'); s.append(g); return g; };
+  const tile = (g, type, num, title, label, idx, score) => {
+    const b = el('button', 'xtile'); b.style.setProperty('--c', 'var(--k-' + type + ')'); b.style.setProperty('--p', 'var(--p-' + type + ')');
+    const top = el('div', 'xtop'); top.append(el('span', 'xnum', num)); if (score) { const sc = el('span', 'xsc' + (score.full ? ' full' : ''), score.text); top.append(sc); }
+    b.append(top, el('span', 'xtitle', title), el('span', 'xlabel', label));
+    b.onclick = () => { open(idx); window.scrollTo({ top: 0 }); }; g.append(b);
+  };
+  const g0 = sec('Start here');
+  tile(g0, 'words', '★', 'Word list', 'Read and listen', -1);
+  tile(g0, 'match', '♪', 'Flashcards with audio', 'Learn the words', -2);
+  tile(g0, 'words', '📖', 'Rules: conditional forms & nominal relative clauses', 'Read the rules', -4);
+  let g1 = sec('Exercises'), g2 = null;
+  DATA.exercises.forEach((e, i) => {
+    const sc = scores[i] != null ? { text: scores[i] + '/' + total(e), full: scores[i] === total(e) } : null;
+    if (e.part && !e.review) { s.append(el('div', 'parth', e.part)); g1 = el('div', 'tilegrid'); s.append(g1); }
+    if (e.review && !g2) g2 = sec('Review: previous list');
+    tile(e.review ? g2 : g1, e.type, String(i + 1), e.title, KIND[e.type], i, sc);
+  });
+  s.append(sendBox(false));
+}
+
+function rules(s) {
+  s.append(el('span', 'kind', 'Before you start'), el('h2', '', 'Rules: grammar of Unit 1'), el('p', 'howto', 'Read the short rules and examples, then practise them in Parts 3 and 6.'));
+  const r = el('div', 'rules');
+  r.innerHTML = `
+<h3>1. Conditional forms (Unit 1A)</h3>
+<h4>Mixed conditionals</h4>
+<p>We mix two times: the condition is about one time, the result is about another time.</p>
+<div class="tw"><table>
+<tr><th>Condition</th><th>Result</th><th>Example</th></tr>
+<tr><td>past → <b>if + past perfect</b></td><td>present → <b>would + infinitive</b></td><td>If I <b>had studied</b> medicine, I <b>would be</b> a doctor now.</td></tr>
+<tr><td>present (always true) → <b>if + past simple</b></td><td>past → <b>would have + past participle</b></td><td>If she <b>weren't</b> so shy, she <b>would have spoken</b> up yesterday.</td></tr>
+</table></div>
+<h4>Other words instead of <i>if</i></h4>
+<ul>
+<li><b>provided / providing (that), as long as, so long as, on condition (that)</b> = only if. <span class="ex">You can borrow my car provided (that) you bring it back by six.</span></li>
+<li><b>unless</b> = if … not. Don't use another <i>not</i>. <span class="ex">We'll lose the client unless we lower the price.</span></li>
+<li><b>even if</b> = it doesn't matter if. <span class="ex">I wouldn't take that job even if they doubled my salary.</span></li>
+<li><b>whether … or not / whether or not</b> = in both cases. <span class="ex">I'm going whether you come with me or not.</span></li>
+<li><b>but for / without + noun</b> = if it weren't for / if it hadn't been for. <span class="ex">But for his support, I would never have finished my thesis.</span></li>
+<li><b>If it weren't for + noun</b> (present) · <b>If it hadn't been for + noun</b> (past). <span class="ex">If it weren't for the rain, we'd be in the garden now.</span></li>
+</ul>
+<div class="note">After <b>provided, as long as, unless, if</b> we use a present tense for the future, not <i>will</i>: <span class="ex">Providing you finish your homework, you can go out.</span></div>
+<h4>Inversion (more formal) — no <i>if</i></h4>
+<div class="tw"><table>
+<tr><th>With if</th><th>Inversion</th></tr>
+<tr><td>If you should need help, …</td><td><b>Should you need</b> help, …</td></tr>
+<tr><td>If I were to win the lottery, …</td><td><b>Were I to win</b> the lottery, …</td></tr>
+<tr><td>If we had known, …</td><td><b>Had we known</b>, …</td></tr>
+<tr><td>If she hadn't been so tired, …</td><td><b>Had she not been</b> so tired, … (not <i>Hadn't she been</i>)</td></tr>
+<tr><td>If it hadn't been for the rain, …</td><td><b>Had it not been for</b> the rain, …</td></tr>
+</table></div>
+<h3>2. Nominal relative clauses (Unit 1B)</h3>
+<p>A nominal relative clause works like a noun. The relative word already contains the noun, so we don't add <i>the thing</i>, <i>the person</i>, etc.</p>
+<div class="tw"><table>
+<tr><th>Word</th><th>Meaning</th><th>Example</th></tr>
+<tr><td><b>what</b></td><td>the thing(s) that</td><td><b>What</b> he said made no sense.</td></tr>
+<tr><td><b>whoever</b></td><td>any person who / the person who</td><td><b>Whoever</b> finishes first can leave.</td></tr>
+<tr><td><b>whatever</b></td><td>anything that</td><td>I'll eat <b>whatever</b> you cook.</td></tr>
+<tr><td><b>whichever</b></td><td>any one (from a limited choice)</td><td>Take <b>whichever</b> you prefer.</td></tr>
+<tr><td><b>whenever</b></td><td>any time that</td><td>Call me <b>whenever</b> you need to talk.</td></tr>
+<tr><td><b>wherever</b></td><td>any place that</td><td>Sit <b>wherever</b> you like.</td></tr>
+<tr><td><b>however</b></td><td>in any way / it doesn't matter how</td><td><b>However</b> hard I try, I can't remember names.</td></tr>
+<tr><td><b>where, when, why, how</b></td><td>the place / time / reason / way</td><td>Tell me <b>where</b> you hid the keys.</td></tr>
+</table></div>
+<h4>Emphasis with <i>What …</i></h4>
+<p>To make an idea stronger, start with <b>What + clause + be</b>: <span class="ex">I need a cup of coffee. → <b>What I need is</b> a cup of coffee.</span> <span class="ex">Her attitude surprised me. → <b>What surprised me was</b> her attitude.</span></p>
+<div class="note">Common mistakes: <i>It's a book <s>what</s> changed my life</i> → <b>that / which</b> (after a noun). <i>What she said <s>it</s> was true</i> → <b>What she said was true.</b></div>`;
+  s.append(r);
+  const f = el('div', 'foot'), r2 = el('div', 'row'), b = el('button', 'btn primary', 'Practise conditional forms →'), b2 = el('button', 'btn', 'Practise nominal relative clauses');
+  const firstOf = t => DATA.exercises.findIndex(e => e.part && e.part.indexOf(t) >= 0);
+  b.onclick = () => { open(firstOf('Conditional')); window.scrollTo({ top: 0 }); }; b2.onclick = () => { open(firstOf('Nominal')); window.scrollTo({ top: 0 }); };
+  r2.append(b2, b); f.append(el('span'), r2); s.append(f);
+}
+
+function words(s) {
+  s.append(el('span', 'kind', 'Before you start'), el('h2', '', 'Word list'), el('p', 'howto', 'Read the list, then go to the exercises. They go from easy to difficult. Each type of exercise has its own colour:'));
+  const lg = el('div', 'legend'); Object.keys(KIND).forEach(k => { const x = el('span', '', KIND[k]); x.style.setProperty('--c', 'var(--k-' + k + ')'); x.style.setProperty('--p', 'var(--p-' + k + ')'); lg.append(x); }); s.append(lg);
+  const w = el('div', 'tw'), t = el('table', 'words');
+  DATA.words.forEach(([en, ua]) => { const r = el('tr'), a = el('td', '', en), sp = el('button', 'spk', '🔊'); sp.setAttribute('aria-label', 'Listen: ' + en); sp.onclick = () => say(en); a.append(sp); r.append(a, el('td', '', ua)); t.append(r); });
+  w.append(t); s.append(w);
+  const f = el('div', 'foot'), r2 = el('div', 'row'), c = el('button', 'btn', 'Flashcards with audio'), b = el('button', 'btn primary', 'Start the exercises →'); c.onclick = () => open(-2); b.onclick = () => open(0); r2.append(c, b); f.append(el('span'), r2); s.append(f);
+}
+
+// Text-to-speech with the browser's own voices (British English preferred)
+let VOICE = null;
+function pickVoice() { try { const vs = speechSynthesis.getVoices(); VOICE = vs.find(v => v.lang === 'en-GB') || vs.find(v => /^en[-_]/i.test(v.lang)) || null; } catch (e) {} }
+try { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; } catch (e) {}
+function say(text) {
+  try {
+    const clean = text.replace(/\bsb\b/g, 'somebody').replace(/\bsth\b/g, 'something').replace(/[()…]/g, ' ').replace(/\s*\/\s*/g, ', ').replace(/\s+/g, ' ').trim();
+    speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(clean); u.lang = 'en-GB'; u.rate = 0.9; if (VOICE) u.voice = VOICE; speechSynthesis.speak(u);
+  } catch (e) {}
+}
+const CKEY = KEY + '-known';
+let known = new Set(); try { known = new Set(JSON.parse(localStorage.getItem(CKEY) || '[]')); } catch (e) {}
+const saveKnown = () => { try { localStorage.setItem(CKEY, JSON.stringify([...known])); } catch (e) {} };
+let cardState = { dir: 'en', onlyLearning: false, auto: true, order: null, pos: 0 };
+let cardKeys = null;
+function cards(s) {
+  s.style.setProperty('--c', 'var(--k-match)'); s.style.setProperty('--p', 'var(--p-match)');
+  s.append(el('span', 'kind', 'Flashcards with audio'), el('h2', '', 'Flashcards'), el('p', 'howto', 'Tap the card to turn it over. Tap Listen to hear the English phrase. Mark each card "I know it" or "Still learning". You can practise only the cards you are still learning.'));
+  const tg = el('div', 'toggles'), body = el('div');
+  s.append(tg, body);
+  const mkT = (label, on, fn) => { const b = el('button', 'btn' + (on ? ' on' : ''), label); b.onclick = () => { fn(); draw(); }; return b; };
+  const build = () => { let idxs = DATA.words.map((_, i) => i); if (cardState.onlyLearning) idxs = idxs.filter(i => !known.has(i)); cardState.order = idxs; cardState.pos = 0; };
+  if (!cardState.order) build();
+  function draw() {
+    tg.innerHTML = '';
+    tg.append(
+      mkT('English → Ukrainian', cardState.dir === 'en', () => cardState.dir = 'en'),
+      mkT('Ukrainian → English', cardState.dir === 'ua', () => cardState.dir = 'ua'),
+      mkT('Shuffle', false, () => { cardState.order = shuffle(cardState.order); cardState.pos = 0; }),
+      mkT('Only "Still learning"', cardState.onlyLearning, () => { cardState.onlyLearning = !cardState.onlyLearning; build(); }),
+      mkT('Auto audio', cardState.auto, () => cardState.auto = !cardState.auto));
+    body.innerHTML = '';
+    const ord = cardState.order;
+    const bar = el('div', 'bar'), fill = el('i'); fill.style.width = (known.size / DATA.words.length * 100) + '%'; bar.append(fill);
+    const kp = el('p', 'hint', 'You know ' + known.size + ' of ' + DATA.words.length + ' words'); kp.style.textAlign = 'center';
+    body.append(kp, bar);
+    if (!ord.length) { const p = el('p', 'howto', 'You marked all the words "I know it". Turn off "Only Still learning" to practise the whole list again.'); p.style.textAlign = 'center'; body.append(p); return; }
+    const i = ord[cardState.pos], [en, ua] = DATA.words[i];
+    const frontText = cardState.dir === 'en' ? en : ua, backText = cardState.dir === 'en' ? ua : en;
+    const card = el('div', 'card'); card.tabIndex = 0; card.setAttribute('role', 'button'); card.setAttribute('aria-label', 'Card: ' + frontText + '. Tap to turn over');
+    const inn = el('div', 'card-in'), f = el('div', 'face front'), b = el('div', 'face back');
+    f.append(el('span', 'lbl', cardState.dir === 'en' ? 'English' : 'Ukrainian'), el('div', 'big', frontText), el('span', 'tip', 'tap to turn over'));
+    b.append(el('span', 'lbl', cardState.dir === 'en' ? 'Ukrainian' : 'English'), el('div', 'big', backText));
+    if (known.has(i)) { const k = el('span', 'lbl', '✓ I know it'); k.style.left = 'auto'; k.style.right = '18px'; f.append(k); }
+    inn.append(f, b); card.append(inn);
+    const flip = () => { card.classList.toggle('flipped'); if (cardState.auto && cardState.dir === 'ua' && card.classList.contains('flipped')) say(en); };
+    card.onclick = flip; card.onkeydown = e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flip(); } };
+    const go = d => { cardState.pos = (cardState.pos + d + ord.length) % ord.length; draw(); };
+    const nb = el('div', 'cardbar');
+    const prev = el('button', 'btn', '← Back'), next = el('button', 'btn', 'Next →'), sayB = el('button', 'btn say', '🔊 Listen'), cnt = el('span', 'count', (cardState.pos + 1) + ' / ' + ord.length);
+    prev.onclick = () => go(-1); next.onclick = () => go(1); sayB.onclick = () => say(en);
+    nb.append(prev, cnt, next);
+    const kb = el('div', 'cardbar'), kn = el('button', 'btn know', '✓ I know it'), lr = el('button', 'btn learn', '↻ Still learning');
+    kn.onclick = () => { known.add(i); saveKnown(); if (cardState.onlyLearning) { ord.splice(cardState.pos, 1); if (cardState.pos >= ord.length) cardState.pos = 0; draw(); } else go(1); };
+    lr.onclick = () => { known.delete(i); saveKnown(); go(1); };
+    kb.append(sayB, lr, kn);
+    body.append(card, nb, kb, el('div', 'keys', 'On a computer: Space turns the card over, ← → move between cards.'));
+    if (cardState.auto && cardState.dir === 'en') say(en);
+    cardKeys = e => { if (current !== -2 || /input|select|textarea/i.test(e.target.tagName)) return; if (e.key === 'ArrowRight') go(1); else if (e.key === 'ArrowLeft') go(-1); else if (e.key === ' ' && e.target === document.body) { e.preventDefault(); flip(); } };
+  }
+  draw();
+}
+document.addEventListener('keydown', e => { if (cardKeys) cardKeys(e); });
+
+open(-3);
+</script>
+
+</body>
+</html>
