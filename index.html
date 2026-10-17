@@ -1133,7 +1133,7 @@
                     return;
                 }
                 if (data.owner) {
-                    ownerEl.textContent = String(data.owner);
+                    ownerEl.textContent = `by ${String(data.owner)}`;
                     ownerEl.hidden = false;
                 }
                 buildCourses(list);
