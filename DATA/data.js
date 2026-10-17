@@ -21,6 +21,16 @@ window.TRAINERS_DATA = {
   ],
   "SpeakOut C1": [
     {
+      "category": "vocabulary",
+      "title": "SpeakOut C1 (Unit 1A/B) vocabulary",
+      "URL": "https://tinakovalova.github.io/name/speakout-c1-unit1ab-revision.html"
+    },
+    {
+      "category": "grammar",
+      "title": "SpeakOut C1 (Unit 1A/B) grammar",
+      "URL": "https://tinakovalova.github.io/name/speakout-c1-unit1ab-revision.html"
+    },
+    {
       "category": "revision",
       "title": "SpeakOut C1 (Unit 1A/B) Revision",
       "URL": "https://tinakovalova.github.io/name/speakout-c1-unit1ab-revision.html"
