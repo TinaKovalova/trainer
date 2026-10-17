@@ -201,50 +201,15 @@
         }
 
         /* Цвет курса: у каждого курса свой пастельный оттенок. Тон задаётся атрибутом data-tone в разметке. */
-        [data-tone="words"] {
-            --c: var(--k-words);
-            --p: var(--p-words);
-        }
-
-        [data-tone="match"] {
-            --c: var(--k-match);
-            --p: var(--p-match);
-        }
-
-        [data-tone="quiz"] {
-            --c: var(--k-quiz);
-            --p: var(--p-quiz);
-        }
-
-        [data-tone="tf"] {
-            --c: var(--k-tf);
-            --p: var(--p-tf);
-        }
-
-        [data-tone="whack"] {
-            --c: var(--k-whack);
-            --p: var(--p-whack);
-        }
-
-        [data-tone="type"] {
-            --c: var(--k-type);
-            --p: var(--p-type);
-        }
-
-        [data-tone="anagram"] {
-            --c: var(--k-anagram);
-            --p: var(--p-anagram);
-        }
-
-        [data-tone="cloze"] {
-            --c: var(--k-cloze);
-            --p: var(--p-cloze);
-        }
-
-        [data-tone="unjumble"] {
-            --c: var(--k-unjumble);
-            --p: var(--p-unjumble);
-        }
+        [data-tone="words"] { --c: var(--k-words); --p: var(--p-words); }
+        [data-tone="match"] { --c: var(--k-match); --p: var(--p-match); }
+        [data-tone="quiz"] { --c: var(--k-quiz); --p: var(--p-quiz); }
+        [data-tone="tf"] { --c: var(--k-tf); --p: var(--p-tf); }
+        [data-tone="whack"] { --c: var(--k-whack); --p: var(--p-whack); }
+        [data-tone="type"] { --c: var(--k-type); --p: var(--p-type); }
+        [data-tone="anagram"] { --c: var(--k-anagram); --p: var(--p-anagram); }
+        [data-tone="cloze"] { --c: var(--k-cloze); --p: var(--p-cloze); }
+        [data-tone="unjumble"] { --c: var(--k-unjumble); --p: var(--p-unjumble); }
 
         /* ---------- Каркас страницы ---------- */
         .layout {
@@ -418,6 +383,47 @@
         .picker__chev svg {
             width: 16px;
             height: 16px;
+        }
+
+        /* Группа: заголовок по ключу верхнего уровня (например, FCE) и блоки курсов под ним */
+        .group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .navigation {
+            gap: 24px;
+        }
+
+        .group__title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0;
+            font-family: var(--display);
+            font-weight: 800;
+            font-size: clamp(19px, 1.7vw, 22px);
+            line-height: 1.1;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--ink);
+        }
+
+        .group__title::after {
+            content: "";
+            flex: 1;
+            height: 2px;
+            border-radius: 2px;
+            background: var(--line);
+        }
+
+        .group__list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-width: 0;
         }
 
         /* Курс (details) */
@@ -598,6 +604,10 @@
 
         /* Режим select (узкие экраны): виден один курс, заголовок-аккордеон скрыт, выбор курса делает select сверху */
         .is-select .course summary {
+            display: none;
+        }
+
+        .is-select .group:not(.is-current) {
             display: none;
         }
 
@@ -849,8 +859,7 @@
                 stroke-linejoin="round" />
         </symbol>
         <symbol id="i-link" viewBox="0 0 24 24">
-            <path
-                d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"
+            <path d="M10 13a5 5 0 0 0 7.07 0l3-3a5 5 0 0 0-7.07-7.07l-1.5 1.5M14 11a5 5 0 0 0-7.07 0l-3 3a5 5 0 0 0 7.07 7.07l1.5-1.5"
                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </symbol>
         <symbol id="i-open" viewBox="0 0 24 24">
@@ -858,8 +867,7 @@
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </symbol>
         <symbol id="i-play" viewBox="0 0 24 24">
-            <path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"
-                fill="currentColor" />
+            <path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z" fill="currentColor" />
         </symbol>
     </svg>
 
@@ -877,22 +885,18 @@
                     <label class="picker__label" for="picker">Course</label>
                     <div class="picker__field">
                         <select class="picker__select" id="picker"></select>
-                        <span class="picker__chev"><svg>
-                                <use href="#i-chev" />
-                            </svg></span>
+                        <span class="picker__chev"><svg><use href="#i-chev" /></svg></span>
                     </div>
                 </div>
 
-                <!-- Сообщение о загрузке или ошибке; курсы добавляются скриптом из  -->
+                <!-- Сообщение о загрузке или ошибке; курсы добавляются скриптом из data.js -->
                 <div class="status" id="status" role="status" aria-live="polite">Loading courses…</div>
             </nav>
         </aside>
 
         <main class="preview" id="previewBox" data-tone="words">
             <div class="preview__empty">
-                <div class="preview__icon"><svg>
-                        <use href="#i-play" />
-                    </svg></div>
+                <div class="preview__icon"><svg><use href="#i-play" /></svg></div>
                 <strong>Select a trainer</strong>
                 <span>Pick an exercise from the list and it will open here.</span>
             </div>
@@ -903,14 +907,19 @@
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <!-- Шаблоны: скрипт копирует их для каждого курса и тренажёра из data.js -->
+    <template id="tpl-group">
+        <section class="group">
+            <h2 class="group__title"></h2>
+            <div class="group__list"></div>
+        </section>
+    </template>
+
     <template id="tpl-course">
         <details class="course">
             <summary>
                 <span class="course__title"></span>
                 <span class="course__count"></span>
-                <span class="course__chev"><svg>
-                        <use href="#i-chev" />
-                    </svg></span>
+                <span class="course__chev"><svg><use href="#i-chev" /></svg></span>
             </summary>
             <div class="course__body">
                 <ul class="course__list"></ul>
@@ -924,19 +933,14 @@
                 <span class="course__name"></span>
             </a>
             <div class="course__actions">
-                <button type="button" class="icon-btn" data-action="copy" aria-label="Copy link" title="Copy link"><svg>
-                        <use href="#i-link" />
-                    </svg></button>
-                <a class="icon-btn" data-action="open" target="_blank" rel="noopener" aria-label="Open in a new tab"
-                    title="Open in a new tab"><svg>
-                        <use href="#i-open" />
-                    </svg></a>
+                <button type="button" class="icon-btn" data-action="copy" aria-label="Copy link" title="Copy link"><svg><use href="#i-link" /></svg></button>
+                <a class="icon-btn" data-action="open" target="_blank" rel="noopener" aria-label="Open in a new tab" title="Open in a new tab"><svg><use href="#i-open" /></svg></a>
             </div>
         </li>
     </template>
 
     <!-- Данные меню: data.js рядом с этим файлом, задаёт window.TRAINERS_DATA -->
-    <script src="DATA/data.js"></script>
+    <script src="data.js"></script>
     <script>
         (() => {
             const $ = (s, r = document) => r.querySelector(s);
@@ -944,6 +948,7 @@
 
             const nav = $("#nav");
             let courses = [];
+            let groups = [];
             const previewBox = $("#previewBox");
             const frame = $("#frame");
             const toast = $("#toast");
@@ -973,6 +978,7 @@
             };
             const FALLBACK_TONES = ["quiz", "tf", "match", "whack", "type"];
 
+            const tplGroup = $("#tpl-group");
             const tplCourse = $("#tpl-course");
             const tplItem = $("#tpl-item");
             const statusBox = $("#status");
@@ -987,19 +993,39 @@
                 return FALLBACK_TONES[sum % FALLBACK_TONES.length];
             }
 
-            // Пропускаем только обычные http(s)-ссылки
+            // Пропускаем только http(s)-ссылки; file: разрешён, только когда сама страница открыта с диска
             function safeUrl(raw) {
                 if (typeof raw !== "string") return null;
                 try {
                     const u = new URL(raw, location.href);
-                    return /^https?:$/.test(u.protocol) ? u.href : null;
+                    const ok = u.protocol === "http:" || u.protocol === "https:"
+                        || (u.protocol === "file:" && location.protocol === "file:");
+                    return ok ? u.href : null;
+                } catch (err) {
+                    return null;
+                }
+            }
+
+            // Ссылка тренажёра = URLpath + name. Для URLpath подходит адрес папки («…/trainer/»)
+            // или адрес страницы («…/index.html», в том числе location.href): имя файла заменяется на name.
+            // Если URLpath не указан, берётся папка текущей страницы. Полный URL в поле URL тоже работает.
+            function itemUrl(it, base) {
+                if (typeof it?.URL === "string" && it.URL.trim()) return safeUrl(it.URL.trim());
+                const name = typeof it?.name === "string" ? it.name.trim() : "";
+                if (!name) return null;
+                try {
+                    const root = new URL(typeof base === "string" && base.trim() ? base.trim() : location.href, location.href);
+                    const last = root.pathname.split("/").pop();
+                    // Адрес без «/» на конце и без расширения (…/trainer) считаем папкой, но не адрес текущей страницы
+                    if (root.href !== location.href && last && !/\.[a-z0-9]+$/i.test(last)) root.pathname += "/";
+                    return safeUrl(new URL(name, root).href);
                 } catch (err) {
                     return null;
                 }
             }
 
             // Каждый ключ верхнего уровня с массивом — курс. Тренажёры курса делятся по category:
-            // пара «курс + категория» становится отдельным блоком, например «fce Grammar Practice».
+            // пара «курс + категория» становится отдельным блоком внутри группы: «fce» → «Grammar Practice».
             // Если название блока должно быть другим, добавьте его сюда: { revision: "Revision" }
             const CATEGORY_LABELS = {};
 
@@ -1013,17 +1039,19 @@
                     if (!Array.isArray(list)) return;
                     const groups = new Map();
                     list.forEach((it) => {
-                        const item = {title: String(it?.title ?? "").trim(), url: safeUrl(it?.URL ?? it?.url)};
+                        const item = { title: String(it?.title ?? "").trim(), url: itemUrl(it, data.URLpath) };
                         if (!item.title || !item.url) return;
                         const category = String(it?.category ?? "").trim();
                         const key = category.toLowerCase();
-                        if (!groups.has(key)) groups.set(key, {category, items: []});
+                        if (!groups.has(key)) groups.set(key, { category, items: [] });
                         groups.get(key).items.push(item);
                     });
-                    groups.forEach(({category, items}) => {
+                    groups.forEach(({ category, items }) => {
                         const label = CATEGORY_LABELS[category.toLowerCase()] || capitalize(category) + " Practice";
                         blocks.push({
-                            title: category ? course + " " + label : course,
+                            // group — ключ верхнего уровня из data.js, он становится заголовком группы
+                            group: course,
+                            title: category ? label : "Trainers",
                             // Цвет блока зависит от категории; без категории цвета идут по порядку курсов
                             tone: category ? categoryTone(category) : COURSE_TONES[courseIndex % COURSE_TONES.length],
                             items
@@ -1034,11 +1062,24 @@
             }
 
             function buildCourses(list) {
-                courses.forEach((d) => d.remove());
-                courses = list.map((c, i) => {
+                groups.forEach((g) => g.remove());
+                groups = [];
+                let lastGroup = null;
+                let groupList = null;
+                courses = list.map((c) => {
+                    // Блоки одного курса идут подряд: новая группа начинается при смене ключа
+                    if (c.group !== lastGroup) {
+                        const g = tplGroup.content.firstElementChild.cloneNode(true);
+                        $(".group__title", g).textContent = c.group;
+                        groupList = $(".group__list", g);
+                        groups.push(g);
+                        lastGroup = c.group;
+                    }
                     const d = tplCourse.content.firstElementChild.cloneNode(true);
                     d.dataset.tone = c.tone;
                     $(".course__title", d).textContent = c.title;
+                    // Полное название для списка выбора на телефоне
+                    d.dataset.label = c.group + " · " + c.title;
                     $(".course__count", d).textContent = c.items.length;
                     const ul = $(".course__list", d);
                     c.items.forEach((it) => {
@@ -1048,9 +1089,10 @@
                         $('[data-action="open"]', li).href = it.url;
                         ul.append(li);
                     });
+                    groupList.append(d);
                     return d;
                 });
-                nav.append(...courses);
+                nav.append(...groups);
 
                 // В списке открыт только один курс: первый
                 current = courses[0];
@@ -1058,7 +1100,13 @@
                     d.open = d === current;
                     d.dataset.expanded = String(d.open);
                 });
-                picker.replaceChildren(...courses.map((d, i) => new Option($(".course__title", d).textContent.trim(), i)));
+                // Список выбора: группы (FCE, SpeakOut C1) показываются как заголовки, под ними блоки курсов
+                picker.replaceChildren(...groups.map((g) => {
+                    const og = document.createElement("optgroup");
+                    og.label = $(".group__title", g).textContent;
+                    $$(".course", g).forEach((d) => og.append(new Option($(".course__title", d).textContent, courses.indexOf(d))));
+                    return og;
+                }));
                 applyMode();
             }
 
@@ -1097,7 +1145,7 @@
 
             function stopAnimation(body) {
                 const a = anims.get(body);
-                if (a) {a.cancel(); anims.delete(body);}
+                if (a) { a.cancel(); anims.delete(body); }
             }
 
             function toggle(d, expand) {
@@ -1119,8 +1167,8 @@
 
                 const to = expand ? body.scrollHeight : 0;
                 const anim = body.animate(
-                    {height: [from + "px", to + "px"], opacity: expand ? [from ? 1 : 0, 1] : [1, 0]},
-                    {duration: DURATION, easing: EASING, fill: expand ? "none" : "forwards"}
+                    { height: [from + "px", to + "px"], opacity: expand ? [from ? 1 : 0, 1] : [1, 0] },
+                    { duration: DURATION, easing: EASING, fill: expand ? "none" : "forwards" }
                 );
                 anims.set(body, anim);
                 anim.onfinish = () => {
@@ -1137,7 +1185,7 @@
                 const d = summary.parentElement;
                 const expand = d.dataset.expanded !== "true";
                 if (expand) {
-                    courses.forEach((o) => {if (o !== d && o.dataset.expanded === "true") toggle(o, false);});
+                    courses.forEach((o) => { if (o !== d && o.dataset.expanded === "true") toggle(o, false); });
                     current = d;
                 }
                 toggle(d, expand);
@@ -1146,6 +1194,7 @@
             /* ---------- Режим select на узких экранах ---------- */
             function showCurrent() {
                 courses.forEach((d) => d.classList.toggle("is-current", d === current));
+                groups.forEach((g) => g.classList.toggle("is-current", g.contains(current)));
                 picker.value = String(courses.indexOf(current));
                 pickerWrap.dataset.tone = current.dataset.tone;
             }
@@ -1156,11 +1205,12 @@
                 if (smallScreen.matches) {
                     nav.classList.add("is-select");
                     pickerWrap.hidden = false;
-                    courses.forEach((d) => {d.open = true; d.dataset.expanded = "true";});
+                    courses.forEach((d) => { d.open = true; d.dataset.expanded = "true"; });
                     showCurrent();
                 } else {
                     nav.classList.remove("is-select");
                     pickerWrap.hidden = true;
+                    groups.forEach((g) => g.classList.remove("is-current"));
                     courses.forEach((d) => {
                         d.classList.remove("is-current");
                         const isCurrent = d === current;
@@ -1189,7 +1239,7 @@
                     previewBox.dataset.tone = link.closest(".course").dataset.tone;
                     previewBox.classList.add("has-content");
                     if (stacked.matches) {
-                        previewBox.scrollIntoView({behavior: reduced.matches ? "auto" : "smooth", block: "start"});
+                        previewBox.scrollIntoView({ behavior: reduced.matches ? "auto" : "smooth", block: "start" });
                     }
                     return;
                 }
@@ -1215,7 +1265,7 @@
                     document.body.appendChild(ta);
                     ta.select();
                     let ok = false;
-                    try {ok = document.execCommand("copy");} catch (err) { /* ignore */}
+                    try { ok = document.execCommand("copy"); } catch (err) { /* ignore */ }
                     ta.remove();
                     ok ? resolve() : reject(new Error("copy failed"));
                 });
